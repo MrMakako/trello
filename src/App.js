@@ -7,6 +7,8 @@ import {
   Outlet,
 } from "react-router-dom";
 
+import Login from "./pages/login";
+
 import {
   createBrowserRouter,
   RouterProvider,
@@ -30,7 +32,7 @@ function App() {
           path="login"
           element={
             <>
-              <h1>Login</h1>
+              <Login />
             </>
           }
         />
