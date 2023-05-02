@@ -56,11 +56,23 @@ body {
   padding: 0.9em 1em;
 }
 
+#form > link,input,
+.btn {
+  border: 1px solid #e2e5e7;
+  padding: 0.9em 1em;
+}
 #form > input:focus {
   outline: none;
 }
 
 #form > .btn {
+  background-color: #2a0966;
+  color: #d4d4d4;
+  font-size: 1em;
+  cursor: pointer;
+}
+
+#form >Link, .btn {
   background-color: #2a0966;
   color: #d4d4d4;
   font-size: 1em;
@@ -77,6 +89,11 @@ body {
 }
 
 .register .col-1 {
+  margin: auto;
+  padding: 60px;
+}
+
+#Form>Link {
   margin: auto;
   padding: 60px;
 }
