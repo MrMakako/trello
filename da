@@ -1,0 +1,32 @@
+[33mcommit e53bfc5279e76401c0c0cc25859d17fbb4295b8f[m[33m ([m[1;36mHEAD -> [m[1;32msignup-diego[m[33m)[m
+Author: Mr.Makako <diegofdiaz1717@gmail.com>
+Date:   Sat Apr 29 17:40:50 2023 -0600
+
+    files creados
+
+[33mcommit d1deda2489eb42eca214e82e6c7a86033f7cc635[m[33m ([m[1;31morigin/PrimeraFase[m[33m, [m[1;32mPrimeraFase[m[33m)[m
+Merge: 7f3164f f166ade
+Author: MrMakako <98541697+MrMakako@users.noreply.github.com>
+Date:   Sat Apr 29 17:01:33 2023 -0600
+
+    Merge pull request #1 from MrMakako/Routes
+    
+    rutas principales listas
+
+[33mcommit f166ade5b8b58368246fb7840ee89ce7206cc670[m[33m ([m[1;31morigin/Routes[m[33m, [m[1;32mRoutes[m[33m)[m
+Author: Mr.Makako <diegofdiaz1717@gmail.com>
+Date:   Sat Apr 29 16:57:44 2023 -0600
+
+    rutas principales listas
+
+[33mcommit 7f3164f765283aa174aff1421e2cc5cdcbe907b2[m[33m ([m[1;31morigin/master[m[33m, [m[1;32mmaster[m[33m)[m
+Author: Mr.Makako <diegofdiaz1717@gmail.com>
+Date:   Sat Apr 29 16:22:09 2023 -0600
+
+    1
+
+[33mcommit 7d8821c8e691f31b0a61f36ff54d26efbd187450[m
+Author: Mr.Makako <diegofdiaz1717@gmail.com>
+Date:   Sat Apr 29 16:06:02 2023 -0600
+
+    Initialize project using Create React App
