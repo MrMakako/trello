@@ -30,14 +30,14 @@ function SignUp() {
               <input
                 type="password"
                 {...register("password")}
-                placeholder="password"
+                placeholder="Password"
               ></input>
               <input
                 type="password"
                 {...register("confirmpwd")}
-                placeholder=" confirm password"
+                placeholder="Confirm password"
               ></input>
-              <button className="btn">sign in</button>
+              <button className="btn">Sign in</button>
             </form>
           </div>
           <div className="col-2">

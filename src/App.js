@@ -13,6 +13,10 @@ import {
   createRoutesFromElements,
 } from "react-router-dom";
 
+import Login from "./pages/login";
+
+import SignUp from "./pages/signUp";
+
 function App() {
   const router = createBrowserRouter(
     createRoutesFromElements(
@@ -30,7 +34,7 @@ function App() {
           path="login"
           element={
             <>
-              <h1>Login</h1>
+              <Login />
             </>
           }
         />
@@ -38,7 +42,7 @@ function App() {
           path="signUp"
           element={
             <>
-              <h1>SignUp</h1>
+              <SignUp />
             </>
           }
         />
