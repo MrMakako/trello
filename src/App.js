@@ -17,7 +17,9 @@ import Login from "./pages/login";
 
 import SignUp from "./pages/signUp";
 
+
 import Home from "./pages/home";
+
 
 function App() {
   const router = createBrowserRouter(
@@ -44,7 +46,7 @@ function App() {
           path="dashboard"
           element={
             <>
-              <h1>Dashboard</h1>
+              <Dashboard />
             </>
           }
         />
