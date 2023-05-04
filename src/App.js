@@ -17,21 +17,15 @@ import Login from "./pages/login";
 
 import SignUp from "./pages/signUp";
 
-import Dashboard from "./pages/dashboard";
+
+import Home from "./pages/home";
+
 
 function App() {
   const router = createBrowserRouter(
     createRoutesFromElements(
       <Route path="/">
-        <Route
-          path="Home"
-          index
-          element={
-            <>
-              <h1>Inicio</h1>
-            </>
-          }
-        />
+        <Route path="home" index element={<Home />} />
         <Route
           path="login"
           element={
@@ -41,7 +35,7 @@ function App() {
           }
         />
         <Route
-          path="signUp"
+          path="register"
           element={
             <>
               <SignUp />
