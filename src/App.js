@@ -13,32 +13,32 @@ import {
   createRoutesFromElements,
 } from "react-router-dom";
 
+import Login from "./pages/login";
+
+import SignUp from "./pages/signUp";
+
+import Dashboard from "./pages/dashboard";
+
+import Home from "./pages/home";
+
 function App() {
   const router = createBrowserRouter(
     createRoutesFromElements(
       <Route path="/">
-        <Route
-          path="Home"
-          index
-          element={
-            <>
-              <h1>Inicio</h1>
-            </>
-          }
-        />
+        <Route path="home" index element={<Home />} />
         <Route
           path="login"
           element={
             <>
-              <h1>Login</h1>
+              <Login />
             </>
           }
         />
         <Route
-          path="signUp"
+          path="register"
           element={
             <>
-              <h1>SignUp</h1>
+              <SignUp />
             </>
           }
         />
@@ -46,7 +46,7 @@ function App() {
           path="dashboard"
           element={
             <>
-              <h1>Dashboard</h1>
+              <Dashboard />
             </>
           }
         />

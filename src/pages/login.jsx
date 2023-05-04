@@ -1,7 +1,7 @@
 import "./signup_style.css";
 import { useForm } from "react-hook-form";
-//Todos los componente de react comienzan con letra mayúscula
-function SignUp() {
+
+function Login() {
   const {
     register,
     handleSubmit,
@@ -15,8 +15,8 @@ function SignUp() {
       <section>
         <div className="register">
           <div className="col-1">
-            <h2>Sign in</h2>
-            <span>Que empieze lo bueno</span>
+            <h2>Login</h2>
+            <span>Bienvenido de nuevo</span>
             <form
               id="form"
               className="flex flex-col"
@@ -32,16 +32,21 @@ function SignUp() {
                 {...register("password")}
                 placeholder="Password"
               ></input>
-              <input
-                type="password"
-                {...register("confirmpwd")}
-                placeholder="Confirm password"
-              ></input>
-              <button className="btn">Sign in</button>
+              <div className="custom-control custom-checkbox">
+                <input
+                  type="checkbox"
+                  className="custom-control-input"
+                  id="customCheck1"
+                />
+                <label className="custom-control-label" htmlFor="customCheck1">
+                  Remember me
+                </label>
+              </div>
+              <button className="btn">Login</button>
             </form>
           </div>
-          <div className="col-2">
-            <img src="/sign_up/image2.jpg" alt="" />
+          <div className="col-3">
+            <img src="img-login.jpg" alt="" />
           </div>
         </div>
       </section>
@@ -49,4 +54,4 @@ function SignUp() {
   );
 }
 
-export default SignUp;
+export default Login;
