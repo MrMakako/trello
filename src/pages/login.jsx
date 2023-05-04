@@ -1,6 +1,6 @@
 import "./signup_style.css";
 import { useForm } from "react-hook-form";
-//todos los ocmponentes de ract comienzan con letra mayuscula
+
 function Login() {
   const {
     register,
