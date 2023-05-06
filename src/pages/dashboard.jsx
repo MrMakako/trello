@@ -49,16 +49,34 @@ function Dashboard() {
   };
 
   const onDrop = (evt, list) => {
+    // check if list is valid
+    if (list < 1 || list > 4) {
+      return;
+    }
+
     const itemID = evt.dataTransfer.getData("itemID");
     const item = tasks.find((item) => item.id == itemID);
+    const oldList = item.list;
+
+    // get the index of the item being dragged
+    const oldIndex = tasks.findIndex((item) => item.id == itemID);
+
+    // get the new index of the item in the list
+    const newIndex = Array.from(evt.target.parentNode.children).indexOf(
+      evt.target
+    );
+
+    // remove the item from the old position
+    tasks.splice(oldIndex, 1);
+
+    // insert the item into the new position
+    tasks.splice(newIndex, 0, item);
+
+    // update the list property of the item
     item.list = list;
 
-    const newState = tasks.map((task) => {
-      if (task.id === itemID) return item;
-      return task;
-    });
-
-    setTasks(newState);
+    // update the state with the new task list
+    setTasks([...tasks]);
   };
 
   return (
