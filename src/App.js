@@ -17,9 +17,9 @@ import Login from "./pages/login";
 
 import SignUp from "./pages/signUp";
 
-
 import Home from "./pages/home";
 
+import Dashboard from "./pages/dashboard";
 
 function App() {
   const router = createBrowserRouter(
