@@ -13,6 +13,8 @@ import {
   createRoutesFromElements,
 } from "react-router-dom";
 
+import Board from "./pages/board";
+
 import Login from "./pages/login";
 
 import SignUp from "./pages/signUp";
@@ -25,7 +27,7 @@ function App() {
   const router = createBrowserRouter(
     createRoutesFromElements(
       <Route path="/">
-        <Route path="home" index element={<Home />} />
+        <Route index element={<Home />} />
         <Route
           path="login"
           element={
@@ -42,14 +44,10 @@ function App() {
             </>
           }
         />
-        <Route
-          path="dashboard"
-          element={
-            <>
-              <Dashboard />
-            </>
-          }
-        />
+        <Route path="dashboard">
+          <Route index element={<Dashboard />}></Route>
+          <Route path=":board_name" element={<Board />}></Route>
+        </Route>
       </Route>
     )
   );
@@ -60,5 +58,6 @@ function App() {
     </>
   );
 }
-
+/*
+ */
 export default App;
