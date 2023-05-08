@@ -12,7 +12,11 @@ function Dashboard() {
   };
 
   request();
-  return <div></div>;
+  return (
+    <>
+      <div></div>
+    </>
+  );
 }
 
 export default Dashboard;
