@@ -83,7 +83,10 @@ function Board() {
     <>
       <div className="drag-and-drop">
         <div className="column column--1" draggable droppable="true">
-          <h3>Backlog</h3>
+          <div className="designed-container">
+            <h3>Backlog</h3>
+            <button class="add-button">+</button>
+          </div>
           <div
             className="dd-zone"
             droppable="true"
@@ -105,7 +108,10 @@ function Board() {
         </div>
 
         <div className="column column--2">
-          <h3>To do</h3>
+          <div className="designed-container">
+            <h3>To do</h3>
+            <button class="add-button">+</button>
+          </div>
           <div
             className="dd-zone"
             droppable="true"
@@ -127,7 +133,10 @@ function Board() {
         </div>
 
         <div className="column column--3">
-          <h3>In progress</h3>
+          <div className="designed-container">
+            <h3>In Progress</h3>
+            <button class="add-button">+</button>
+          </div>
           <div
             className="dd-zone"
             droppable="true"
@@ -149,7 +158,10 @@ function Board() {
         </div>
 
         <div className="column column--4">
-          <h3>Designed</h3>
+          <div className="designed-container">
+            <h3>Designed</h3>
+            <button class="add-button">+</button>
+          </div>
           <div
             className="dd-zone"
             droppable="true"
