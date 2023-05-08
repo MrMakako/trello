@@ -154,7 +154,7 @@ h1 {
 }
 
 .add-button:hover {
-  background-color: #000000;
+  background-color: #2a0966;
 }
 
 .designed-container {
@@ -171,7 +171,7 @@ h1 {
   border-radius: 50%;
   width: 30px;
   height: 30px;
-  background-color: #a5a5a5;
+  background-color: #6a46ac;
   color: #fff;
   font-size: 24px;
   display: flex;

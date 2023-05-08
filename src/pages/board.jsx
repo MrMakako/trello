@@ -1,7 +1,9 @@
 import { useState } from "react";
 import "./dashboard_style.css";
+import Popup from "./popup";
 
 function Board() {
+  const [buttonPopup, setButtonPopup] = useState(false);
   const [tasks, setTasks] = useState([
     {
       id: 1,
@@ -160,7 +162,12 @@ function Board() {
         <div className="column column--4">
           <div className="designed-container">
             <h3>Designed</h3>
-            <button class="add-button">+</button>
+            <button class="add-button" onClick={() => setButtonPopup(true)}>
+              +
+            </button>
+            <Popup trigger={buttonPopup}>
+              <h3>My Popup</h3>
+            </Popup>
           </div>
           <div
             className="dd-zone"
