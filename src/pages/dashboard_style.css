@@ -91,6 +91,7 @@ h1 {
   border-radius: 8px;
   border-top: 7px solid;
   box-shadow: 0 8px 16px rgba(#333, 0.1);
+  gap: 5px;
 }
 
 .column--1 {
@@ -168,7 +169,7 @@ h1 {
 }
 
 .add-button {
-  border-radius: 50%;
+  border-radius: 30%;
   width: 30px;
   height: 30px;
   background-color: #6a46ac;
@@ -180,4 +181,31 @@ h1 {
   border: none;
   outline: none;
   cursor: pointer;
+}
+
+.new-card-info {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  gap: 10px;
+}
+
+.btn-save {
+  padding: 0.5rem;
+  border-radius: 5px;
+  border: none;
+  background-color: #6a46ac;
+  color: white;
+  cursor: pointer;
+  margin-left: 1rem;
+}
+
+.large-input {
+  width: 560px;
+  font-size: 16px;
+}
+
+.btn-save:hover {
+  background-color: #2a0966;
 }

@@ -52,7 +52,7 @@ function Board() {
 
   const onDrop = (evt, list) => {
     // check if list is valid
-    if (list < 1 || list > 4) {
+    if (list < 1) {
       return;
     }
 
@@ -87,7 +87,15 @@ function Board() {
         <div className="column column--1" draggable droppable="true">
           <div className="designed-container">
             <h3>Backlog</h3>
-            <button class="add-button">+</button>
+            <button className="add-button" onClick={() => setButtonPopup(true)}>
+              +
+            </button>
+            <Popup trigger={buttonPopup} setTrigger={setButtonPopup}>
+              <div className="new-card-info">
+                <input type="text" className="large-input" />
+                <button className="btn-save">Save</button>
+              </div>
+            </Popup>
           </div>
           <div
             className="dd-zone"
@@ -110,10 +118,7 @@ function Board() {
         </div>
 
         <div className="column column--2">
-          <div className="designed-container">
-            <h3>To do</h3>
-            <button class="add-button">+</button>
-          </div>
+          <h3>To do</h3>
           <div
             className="dd-zone"
             droppable="true"
@@ -135,10 +140,7 @@ function Board() {
         </div>
 
         <div className="column column--3">
-          <div className="designed-container">
-            <h3>In Progress</h3>
-            <button class="add-button">+</button>
-          </div>
+          <h3>In Progress</h3>
           <div
             className="dd-zone"
             droppable="true"
@@ -160,15 +162,7 @@ function Board() {
         </div>
 
         <div className="column column--4">
-          <div className="designed-container">
-            <h3>Designed</h3>
-            <button class="add-button" onClick={() => setButtonPopup(true)}>
-              +
-            </button>
-            <Popup trigger={buttonPopup}>
-              <h3>My Popup</h3>
-            </Popup>
-          </div>
+          <h3>Designed</h3>
           <div
             className="dd-zone"
             droppable="true"

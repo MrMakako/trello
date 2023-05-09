@@ -20,10 +20,15 @@
 }
 
 .popup-inner .btn_close {
+  border-radius: 30%;
   position: absolute;
   top: 16px;
   right: 16px;
-  background-color: #2a0966;
-  color: #d4d4d4;
+  background-color: #6a46ac;
+  color: #ffffff;
   cursor: pointer;
+}
+
+.popup-inner .btn_close:hover {
+  background-color: #2a0966;
 }
