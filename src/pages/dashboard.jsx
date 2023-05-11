@@ -1,20 +1,24 @@
-import { useState } from "react";
-import "./dashboard_style.css";
-import { Outlet } from "react-router-dom";
 import axios from "axios";
+import StackList from "./components/stack";
+import { useState, useEffect } from "react";
 function Dashboard() {
-  const request = () => {
+  const [user_boards, setBoards] = useState([]);
+  useEffect(() => {
     axios
       .get("http://localhost:3006/boards", { params: { user_id: 1 } })
       .then((Response) => {
+        console.log();
         console.log(Response.data);
+        setBoards(Response.data[0]);
       });
-  };
+  }, []);
 
-  request();
   return (
     <>
-      <div></div>
+      <div>
+        <h1>Mis Proyectos</h1>
+        <div>{StackList(user_boards)}</div>
+      </div>
     </>
   );
 }

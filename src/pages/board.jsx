@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef, useMemo } from "react";
 import "./dashboard_style.css";
 import Popup from "./popup";
 import axios from "axios";
@@ -6,48 +6,49 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faEdit, faTrash } from "@fortawesome/free-solid-svg-icons";
 
 function Board() {
+  const active = useRef(true);
   const [buttonPopup, setButtonPopup] = useState(false);
   const [tasks, setTasks] = useState([
     {
-      id: 1,
+      id: 7,
       title: "Tarea 1",
       body: "Lorem, ipsum dolor sit amet consectetur adipisicing elit ipsum dolor.",
       list: 1,
-      position: 1,
+      position: 3,
     },
     {
-      id: 2,
+      id: 8,
       title: "Tarea 2",
       body: "Lorem, ipsum dolor sit amet consectetur adipisicing elit ipsum dolor.",
-      list: 1,
+      list: 2,
     },
     {
-      id: 3,
+      id: 9,
       title: "Tarea 3",
       body: "Lorem, ipsum dolor sit amet consectetur adipisicing elit ipsum dolor.",
       list: 3,
     },
-    {
-      id: 4,
-      title: "Tarea 4",
-      body: "Lorem, ipsum dolor sit amet consectetur adipisicing elit ipsum dolor.",
-      list: 2,
-    },
-    {
-      id: 5,
-      title: "Tarea 5",
-      body: "Lorem, ipsum dolor sit amet consectetur adipisicing elit ipsum dolor.",
-      list: 2,
-    },
   ]);
 
-  useEffect(() => {
+  const init = useMemo(() => {
     axios
-      .get("http://localhost:3000/cards", { params: { board_id: 1 } })
+      //
+      .get("http://localhost:3006/cards", { params: { board_id: 1 } })
       .then((Response) => {
-        console.log();
-        console.log(Response.data);
-        setTasks(Response.data[0]);
+        console.log("SOLO UNA VEZ");
+        setTasks([]);
+        //cambiar
+        for (const key in Response.data[0]) {
+          const element = Response.data[0][key];
+          console.log(element);
+          const newJson = {
+            id: element.position,
+            title: element.name,
+            body: element.description,
+            list: element.list_id,
+          };
+          setTasks((tasks) => [...tasks, newJson]);
+        }
       });
   }, []);
 

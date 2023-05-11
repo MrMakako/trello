@@ -9,10 +9,10 @@ function Pile(user_boards) {
     <Box sx={{ width: "100%" }}>
       <Stack spacing={2}>
         {user_boards.map((data) => (
-          <Button>r_id}
+          <Button>
+            {data.id}-{data.name} creado por:{data.user_id}
           </Button>
         ))}
-            {data.id}-{data.name} creado por:{data.use
       </Stack>
     </Box>
   );
