@@ -1,6 +1,7 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import "./dashboard_style.css";
 import Popup from "./popup";
+import axios from "axios";
 
 function Board() {
   const [buttonPopup, setButtonPopup] = useState(false);
@@ -36,6 +37,16 @@ function Board() {
       list: 2,
     },
   ]);
+
+  useEffect(() => {
+    axios
+      .get("http://localhost:3000/cards", { params: { user_id: 1 } })
+      .then((Response) => {
+        console.log();
+        console.log(Response.data);
+        setTasks(Response.data[0]);
+      });
+  }, []);
 
   const getList = (list) => {
     return tasks.filter((item) => item.list === list);
