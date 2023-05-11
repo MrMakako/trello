@@ -30,6 +30,18 @@ function Board() {
     },
   ]);
 
+  const [newTaskDesc, setNewTaskName] = useState("");
+
+  function addTask(title, body) {
+    const newTask = { id: tasks.length + 1, title, body, list: 1 };
+    setTasks([...tasks, newTask]);
+  }
+
+  function handleSaveClick() {
+    addTask("Name", newTaskDesc);
+    setNewTaskName("");
+  }
+
   const init = useMemo(() => {
     axios
       //
@@ -111,8 +123,15 @@ function Board() {
             </button>
             <Popup trigger={buttonPopup} setTrigger={setButtonPopup}>
               <div className="new-card-info">
-                <input type="text" className="large-input" />
-                <button className="btn-save">Save</button>
+                <input
+                  type="text"
+                  className="large-input"
+                  value={newTaskDesc}
+                  onChange={(event) => setNewTaskName(event.target.value)}
+                />
+                <button className="btn-save" onClick={handleSaveClick}>
+                  Save
+                </button>
               </div>
             </Popup>
           </div>
