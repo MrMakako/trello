@@ -56,6 +56,10 @@ function Board() {
     return tasks.filter((item) => item.list === list);
   };
 
+  function removeItem(id) {
+    setTasks(tasks.filter((item) => item.id !== id));
+  }
+
   const startDrag = (evt, item) => {
     evt.dataTransfer.setData("itemID", item.id);
     console.log(item);
@@ -128,7 +132,10 @@ function Board() {
                 <button className="edit-button">
                   <FontAwesomeIcon icon={faEdit} />
                 </button>
-                <button className="delete-button">
+                <button
+                  className="delete-button"
+                  onClick={() => removeItem(item.id)}
+                >
                   <FontAwesomeIcon icon={faTrash} />
                 </button>
                 <strong className="title">{item.title}</strong>
@@ -156,7 +163,10 @@ function Board() {
                 <button className="edit-button">
                   <FontAwesomeIcon icon={faEdit} />
                 </button>
-                <button className="delete-button">
+                <button
+                  className="delete-button"
+                  onClick={() => removeItem(item.id)}
+                >
                   <FontAwesomeIcon icon={faTrash} />
                 </button>
                 <strong className="title">{item.title}</strong>
@@ -184,7 +194,10 @@ function Board() {
                 <button className="edit-button">
                   <FontAwesomeIcon icon={faEdit} />
                 </button>
-                <button className="delete-button">
+                <button
+                  className="delete-button"
+                  onClick={() => removeItem(item.id)}
+                >
                   <FontAwesomeIcon icon={faTrash} />
                 </button>
                 <strong className="title">{item.title}</strong>
@@ -212,7 +225,10 @@ function Board() {
                 <button className="edit-button">
                   <FontAwesomeIcon icon={faEdit} />
                 </button>
-                <button className="delete-button">
+                <button
+                  className="delete-button"
+                  onClick={() => removeItem(item.id)}
+                >
                   <FontAwesomeIcon icon={faTrash} />
                 </button>
                 <strong className="title">{item.title}</strong>
