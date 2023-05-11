@@ -2,6 +2,8 @@ import { useState, useEffect } from "react";
 import "./dashboard_style.css";
 import Popup from "./popup";
 import axios from "axios";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { faEdit, faTrash } from "@fortawesome/free-solid-svg-icons";
 
 function Board() {
   const [buttonPopup, setButtonPopup] = useState(false);
@@ -11,6 +13,7 @@ function Board() {
       title: "Tarea 1",
       body: "Lorem, ipsum dolor sit amet consectetur adipisicing elit ipsum dolor.",
       list: 1,
+      position: 1,
     },
     {
       id: 2,
@@ -40,7 +43,7 @@ function Board() {
 
   useEffect(() => {
     axios
-      .get("http://localhost:3000/cards", { params: { user_id: 1 } })
+      .get("http://localhost:3000/cards", { params: { board_id: 1 } })
       .then((Response) => {
         console.log();
         console.log(Response.data);
@@ -121,6 +124,12 @@ function Board() {
                 draggable
                 onDragStart={(evt) => startDrag(evt, item)}
               >
+                <button className="edit-button">
+                  <FontAwesomeIcon icon={faEdit} />
+                </button>
+                <button className="delete-button">
+                  <FontAwesomeIcon icon={faTrash} />
+                </button>
                 <strong className="title">{item.title}</strong>
                 <p className="body">{item.body}</p>
               </div>
@@ -143,6 +152,12 @@ function Board() {
                 draggable
                 onDragStart={(evt) => startDrag(evt, item)}
               >
+                <button className="edit-button">
+                  <FontAwesomeIcon icon={faEdit} />
+                </button>
+                <button className="delete-button">
+                  <FontAwesomeIcon icon={faTrash} />
+                </button>
                 <strong className="title">{item.title}</strong>
                 <p className="body">{item.body}</p>
               </div>
@@ -165,6 +180,12 @@ function Board() {
                 draggable
                 onDragStart={(evt) => startDrag(evt, item)}
               >
+                <button className="edit-button">
+                  <FontAwesomeIcon icon={faEdit} />
+                </button>
+                <button className="delete-button">
+                  <FontAwesomeIcon icon={faTrash} />
+                </button>
                 <strong className="title">{item.title}</strong>
                 <p className="body">{item.body}</p>
               </div>
@@ -187,6 +208,12 @@ function Board() {
                 draggable
                 onDragStart={(evt) => startDrag(evt, item)}
               >
+                <button className="edit-button">
+                  <FontAwesomeIcon icon={faEdit} />
+                </button>
+                <button className="delete-button">
+                  <FontAwesomeIcon icon={faTrash} />
+                </button>
                 <strong className="title">{item.title}</strong>
                 <p className="body">{item.body}</p>
               </div>

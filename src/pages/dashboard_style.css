@@ -139,13 +139,36 @@ h1 {
   height: 100%;
 }
 
+.edit-button {
+  position: absolute;
+  top: 10px;
+  right: 60px;
+  cursor: pointer;
+  color: #5b5b73;
+  border: none;
+  background-color: transparent;
+  font-size: 18px;
+}
+
+.delete-button {
+  position: absolute;
+  top: 10px;
+  right: 10px;
+  cursor: pointer;
+  color: #5b5b73;
+  border: none;
+  background-color: transparent;
+  font-size: 18px;
+}
+
 .dd-element {
+  position: relative;
   font-size: 18px;
   background-color: #ffffff;
   border-radius: 8px;
   padding: 26px 20px;
-  cursor: pointer;
   color: #5b5b73;
+  z-index: 99;
 }
 
 .dd-element .body {
