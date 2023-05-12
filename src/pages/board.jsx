@@ -3,7 +3,7 @@ import "./dashboard_style.css";
 import Popup from "./popup";
 import axios from "axios";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faEdit, faTrash } from "@fortawesome/free-solid-svg-icons";
+import { faEdit, faSave, faTrash } from "@fortawesome/free-solid-svg-icons";
 
 function Board() {
   const active = useRef(true);
@@ -76,6 +76,24 @@ function Board() {
     evt.dataTransfer.setData("itemID", item.id);
     console.log(item);
   };
+  async function storeCards() {
+    //will delete all cards
+    let myJson = [];
+
+    for (let i = 0; i < tasks.length; i++) {
+      const element = tasks[i];
+      const newJson = {
+        name: element.title,
+        description: element.body,
+        position: element.id,
+        list_id: element.list,
+      };
+
+      myJson.push(newJson);
+    }
+    console.log(myJson);
+    await axios.post("http://localhost:3006/cards", myJson);
+  }
 
   const draggingOver = (evt) => {
     evt.preventDefault();
@@ -114,6 +132,9 @@ function Board() {
 
   return (
     <>
+      <button className="delete-button" onClick={() => storeCards()}>
+        <FontAwesomeIcon icon={faSave} />
+      </button>
       <div className="drag-and-drop">
         <div className="column column--1" draggable droppable="true">
           <div className="designed-container">
