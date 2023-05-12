@@ -46,7 +46,7 @@ function Login() {
             </form>
           </div>
           <div className="col-3">
-            <img src="img-login.jpg" alt="" />
+            <img src="./sign_up/image1.jpg" alt="" />
           </div>
         </div>
       </section>

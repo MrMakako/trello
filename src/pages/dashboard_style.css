@@ -82,6 +82,7 @@ h1 {
 }
 
 .column {
+
   display: flex;
   flex-direction: column;
   background-color: #f6f8fc;
@@ -95,22 +96,27 @@ h1 {
 }
 
 .column--1 {
+  width: 300px;
   border-color: #fb6f92;
 }
 
 .column--1 .title {
+
   color: #fb6f92;
 }
 
 .column--2 {
+  width: 300px;
   border-color: #ff8fab;
 }
 
 .column--2 .title {
+
   color: #ff8fab;
 }
 
 .column--3 {
+  width: 300px;
   border-color: #ffb3c6;
 }
 

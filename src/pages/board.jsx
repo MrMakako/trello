@@ -8,27 +8,7 @@ import { faEdit, faSave, faTrash } from "@fortawesome/free-solid-svg-icons";
 function Board() {
   const active = useRef(true);
   const [buttonPopup, setButtonPopup] = useState(false);
-  const [tasks, setTasks] = useState([
-    {
-      id: 7,
-      title: "Tarea 1",
-      body: "Lorem, ipsum dolor sit amet consectetur adipisicing elit ipsum dolor.",
-      list: 1,
-      position: 3,
-    },
-    {
-      id: 8,
-      title: "Tarea 2",
-      body: "Lorem, ipsum dolor sit amet consectetur adipisicing elit ipsum dolor.",
-      list: 2,
-    },
-    {
-      id: 9,
-      title: "Tarea 3",
-      body: "Lorem, ipsum dolor sit amet consectetur adipisicing elit ipsum dolor.",
-      list: 3,
-    },
-  ]);
+  const [tasks, setTasks] = useState([]);
 
   const [newTaskDesc, setNewTaskName] = useState("");
 
@@ -48,7 +28,7 @@ function Board() {
       .get("http://localhost:3006/cards", { params: { board_id: 1 } })
       .then((Response) => {
         console.log("SOLO UNA VEZ");
-        setTasks([]);
+        // setTasks([]);
         //cambiar
         for (const key in Response.data[0]) {
           const element = Response.data[0][key];
