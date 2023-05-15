@@ -112,152 +112,162 @@ function Board() {
 
   return (
     <>
-      <button className="delete-button" onClick={() => storeCards()}>
-        <FontAwesomeIcon icon={faSave} />
-      </button>
-      <div className="drag-and-drop">
-        <div className="column column--1" draggable droppable="true">
-          <div className="designed-container">
-            <h3>Backlog</h3>
-            <button className="add-button" onClick={() => setButtonPopup(true)}>
-              +
-            </button>
-            <Popup trigger={buttonPopup} setTrigger={setButtonPopup}>
-              <div className="new-card-info">
-                <input
-                  type="text"
-                  className="large-input"
-                  value={newTaskDesc}
-                  onChange={(event) => setNewTaskName(event.target.value)}
-                />
-                <button className="btn-save" onClick={handleSaveClick}>
-                  Save
-                </button>
-              </div>
-            </Popup>
-          </div>
-          <div
-            className="dd-zone"
-            droppable="true"
-            onDragOver={(evt) => draggingOver(evt)}
-            onDrop={(evt) => onDrop(evt, 1)}
-          >
-            {getList(1).map((item) => (
-              <div
-                className="dd-element"
-                key={item.id}
-                draggable
-                onDragStart={(evt) => startDrag(evt, item)}
-              >
-                <button className="edit-button">
-                  <FontAwesomeIcon icon={faEdit} />
-                </button>
+      <header>
+        <h1>Your Project Manager</h1>
+      </header>
+      <body>
+        <button className="delete-button" onClick={() => storeCards()}>
+          <FontAwesomeIcon icon={faSave} />
+        </button>
+        <main>
+          <div className="drag-and-drop">
+            <div className="column column--1" draggable droppable="true">
+              <div className="designed-container">
+                <h3>Backlog</h3>
                 <button
-                  className="delete-button"
-                  onClick={() => removeItem(item.id)}
+                  className="add-button"
+                  onClick={() => setButtonPopup(true)}
                 >
-                  <FontAwesomeIcon icon={faTrash} />
+                  +
                 </button>
-                <strong className="title">{item.title}</strong>
-                <p className="body">{item.body}</p>
+                <Popup trigger={buttonPopup} setTrigger={setButtonPopup}>
+                  <div className="new-card-info">
+                    <input
+                      type="text"
+                      className="large-input"
+                      value={newTaskDesc}
+                      onChange={(event) => setNewTaskName(event.target.value)}
+                    />
+                    <button className="btn-save" onClick={handleSaveClick}>
+                      Save
+                    </button>
+                  </div>
+                </Popup>
               </div>
-            ))}
-          </div>
-        </div>
+              <div
+                className="dd-zone"
+                droppable="true"
+                onDragOver={(evt) => draggingOver(evt)}
+                onDrop={(evt) => onDrop(evt, 1)}
+              >
+                {getList(1).map((item) => (
+                  <div
+                    className="dd-element"
+                    key={item.id}
+                    draggable
+                    onDragStart={(evt) => startDrag(evt, item)}
+                  >
+                    <button className="edit-button">
+                      <FontAwesomeIcon icon={faEdit} />
+                    </button>
+                    <button
+                      className="delete-button"
+                      onClick={() => removeItem(item.id)}
+                    >
+                      <FontAwesomeIcon icon={faTrash} />
+                    </button>
+                    <strong className="title">{item.title}</strong>
+                    <p className="body">{item.body}</p>
+                  </div>
+                ))}
+              </div>
+            </div>
 
-        <div className="column column--2">
-          <h3>To do</h3>
-          <div
-            className="dd-zone"
-            droppable="true"
-            onDragOver={(evt) => draggingOver(evt)}
-            onDrop={(evt) => onDrop(evt, 2)}
-          >
-            {getList(2).map((item) => (
+            <div className="column column--2">
+              <h3>To do</h3>
               <div
-                className="dd-element"
-                key={item.id}
-                draggable
-                onDragStart={(evt) => startDrag(evt, item)}
+                className="dd-zone"
+                droppable="true"
+                onDragOver={(evt) => draggingOver(evt)}
+                onDrop={(evt) => onDrop(evt, 2)}
               >
-                <button className="edit-button">
-                  <FontAwesomeIcon icon={faEdit} />
-                </button>
-                <button
-                  className="delete-button"
-                  onClick={() => removeItem(item.id)}
-                >
-                  <FontAwesomeIcon icon={faTrash} />
-                </button>
-                <strong className="title">{item.title}</strong>
-                <p className="body">{item.body}</p>
+                {getList(2).map((item) => (
+                  <div
+                    className="dd-element"
+                    key={item.id}
+                    draggable
+                    onDragStart={(evt) => startDrag(evt, item)}
+                  >
+                    <button className="edit-button">
+                      <FontAwesomeIcon icon={faEdit} />
+                    </button>
+                    <button
+                      className="delete-button"
+                      onClick={() => removeItem(item.id)}
+                    >
+                      <FontAwesomeIcon icon={faTrash} />
+                    </button>
+                    <strong className="title">{item.title}</strong>
+                    <p className="body">{item.body}</p>
+                  </div>
+                ))}
               </div>
-            ))}
-          </div>
-        </div>
+            </div>
 
-        <div className="column column--3">
-          <h3>In Progress</h3>
-          <div
-            className="dd-zone"
-            droppable="true"
-            onDragOver={(evt) => draggingOver(evt)}
-            onDrop={(evt) => onDrop(evt, 3)}
-          >
-            {getList(3).map((item) => (
+            <div className="column column--3">
+              <h3>In Progress</h3>
               <div
-                className="dd-element"
-                key={item.id}
-                draggable
-                onDragStart={(evt) => startDrag(evt, item)}
+                className="dd-zone"
+                droppable="true"
+                onDragOver={(evt) => draggingOver(evt)}
+                onDrop={(evt) => onDrop(evt, 3)}
               >
-                <button className="edit-button">
-                  <FontAwesomeIcon icon={faEdit} />
-                </button>
-                <button
-                  className="delete-button"
-                  onClick={() => removeItem(item.id)}
-                >
-                  <FontAwesomeIcon icon={faTrash} />
-                </button>
-                <strong className="title">{item.title}</strong>
-                <p className="body">{item.body}</p>
+                {getList(3).map((item) => (
+                  <div
+                    className="dd-element"
+                    key={item.id}
+                    draggable
+                    onDragStart={(evt) => startDrag(evt, item)}
+                  >
+                    <button className="edit-button">
+                      <FontAwesomeIcon icon={faEdit} />
+                    </button>
+                    <button
+                      className="delete-button"
+                      onClick={() => removeItem(item.id)}
+                    >
+                      <FontAwesomeIcon icon={faTrash} />
+                    </button>
+                    <strong className="title">{item.title}</strong>
+                    <p className="body">{item.body}</p>
+                  </div>
+                ))}
               </div>
-            ))}
-          </div>
-        </div>
+            </div>
 
-        <div className="column column--4">
-          <h3>Designed</h3>
-          <div
-            className="dd-zone"
-            droppable="true"
-            onDragOver={(evt) => draggingOver(evt)}
-            onDrop={(evt) => onDrop(evt, 4)}
-          >
-            {getList(4).map((item) => (
+            <div className="column column--4">
+              <h3>Designed</h3>
               <div
-                className="dd-element"
-                key={item.id}
-                draggable
-                onDragStart={(evt) => startDrag(evt, item)}
+                className="dd-zone"
+                droppable="true"
+                onDragOver={(evt) => draggingOver(evt)}
+                onDrop={(evt) => onDrop(evt, 4)}
               >
-                <button className="edit-button">
-                  <FontAwesomeIcon icon={faEdit} />
-                </button>
-                <button
-                  className="delete-button"
-                  onClick={() => removeItem(item.id)}
-                >
-                  <FontAwesomeIcon icon={faTrash} />
-                </button>
-                <strong className="title">{item.title}</strong>
-                <p className="body">{item.body}</p>
+                {getList(4).map((item) => (
+                  <div
+                    className="dd-element"
+                    key={item.id}
+                    draggable
+                    onDragStart={(evt) => startDrag(evt, item)}
+                  >
+                    <button className="edit-button">
+                      <FontAwesomeIcon icon={faEdit} />
+                    </button>
+                    <button
+                      className="delete-button"
+                      onClick={() => removeItem(item.id)}
+                    >
+                      <FontAwesomeIcon icon={faTrash} />
+                    </button>
+                    <strong className="title">{item.title}</strong>
+                    <p className="body">{item.body}</p>
+                  </div>
+                ))}
               </div>
-            ))}
+            </div>
           </div>
-        </div>
-      </div>
+        </main>
+      </body>
     </>
   );
 }

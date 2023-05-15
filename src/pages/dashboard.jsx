@@ -16,8 +16,12 @@ function Dashboard() {
   return (
     <>
       <div>
-        <h1>Mis Proyectos</h1>
-        <div>{StackList(user_boards)}</div>
+        <header>
+          <h1>Mis Proyectos</h1>
+        </header>
+        <body>
+          <div>{StackList(user_boards)}</div>
+        </body>
       </div>
     </>
   );
