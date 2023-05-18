@@ -27,20 +27,8 @@ function Board() {
       //
       .get("http://localhost:3006/cards", { params: { board_id: 1 } })
       .then((Response) => {
-        console.log("SOLO UNA VEZ");
-        // setTasks([]);
-        //cambiar
-        for (const key in Response.data[0]) {
-          const element = Response.data[0][key];
-          console.log(element);
-          const newJson = {
-            id: element.position,
-            title: element.name,
-            body: element.description,
-            list: element.list_id,
-          };
-          setTasks((tasks) => [...tasks, newJson]);
-        }
+        console.log(Response.data[0]);
+        setTasks(Response.data[0]);
       });
   }, []);
 
