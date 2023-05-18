@@ -13,10 +13,11 @@ function Login() {
   return (
     <div className="App">
       <section>
+        <h1>Back To Work!</h1>
         <div className="register">
           <div className="col-1">
             <h2>Login</h2>
-            <span>Bienvenido de nuevo</span>
+            <span>Welcome Back!</span>
             <form
               id="form"
               className="flex flex-col"
@@ -46,7 +47,7 @@ function Login() {
             </form>
           </div>
           <div className="col-3">
-            <img src="./sign_up/image1.jpg" alt="" />
+            <img src="/sign_up/image2.jpg" alt="" />
           </div>
         </div>
       </section>
