@@ -13,10 +13,15 @@ function SignUp() {
   return (
     <div className="App">
       <section>
+        <section>
+          <h1>
+            Free Kanban Board Project Management tool. Easy to use Sign Up now!
+          </h1>
+        </section>
         <div className="register">
           <div className="col-1">
-            <h2>Sign in</h2>
-            <span>Que empieze lo bueno</span>
+            <h2>Sign Up</h2>
+            <span>Start Now</span>
             <form
               id="form"
               className="flex flex-col"
@@ -41,7 +46,7 @@ function SignUp() {
             </form>
           </div>
           <div className="col-2">
-            <img src="/sign_up/image2.jpg" alt="" />
+            <img src="/sign_up/image3.jpg" alt="" />
           </div>
         </div>
       </section>
