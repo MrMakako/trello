@@ -27,7 +27,7 @@
     "react-trello": "^2.2.11",
     "sort-by": "^1.2.0",
     "web-vitals": "^2.1.4"
-    "sort-by": "^1.2.0"
+
   },
   "scripts": {
     "start": "react-scripts start",
