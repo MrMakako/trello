@@ -50,7 +50,8 @@ function Login() {
               onSubmit={handleSubmit(onSubmit)}
             >
               <input
-                type="text"
+                type="email"
+                required
                 {...register("email")}
                 placeholder="Email"
               ></input>
