@@ -1,6 +1,6 @@
 import axios from "axios";
 
-async function registerUser(email, password) {
+export async function registerUser(email, password) {
   axios
     .post("http://localhost:3006/user/register", {
       email: email,
@@ -11,7 +11,7 @@ async function registerUser(email, password) {
     });
 }
 
-async function loginUser(email, password) {
+export async function loginUser(email, password) {
   axios
     .post("http://localhost:3006/user/login", {
       email: email,
@@ -22,10 +22,6 @@ async function loginUser(email, password) {
     });
 }
 
-export default {
-  registerUser,
-  loginUser,
-};
 /*
                               ⬛⬛⬛⬛⬛⬛
                             ⬛🟥🟥🟥🟥🟥🟥⬛

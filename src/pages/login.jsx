@@ -2,7 +2,7 @@ import "./signup_style.css";
 import { useForm } from "react-hook-form";
 import { yupResolver } from "@hookform/resolvers/yup";
 import * as Yup from "yup";
-import loginUser from "./requests/user.request";
+import { loginUser } from "./requests/user.request";
 import { useHistory } from "react-router-dom";
 
 function Login() {

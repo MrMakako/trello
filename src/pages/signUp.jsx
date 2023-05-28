@@ -2,7 +2,7 @@ import "./signup_style.css";
 import { useForm } from "react-hook-form";
 import { yupResolver } from "@hookform/resolvers/yup";
 import * as Yup from "yup";
-import userRegister from "./requests/user.request";
+import { registerUser } from "./requests/user.request";
 //Todos los componente de react comienzan con letra mayúscula
 function SignUp() {
   let password;
@@ -26,7 +26,7 @@ function SignUp() {
   //enviar
   const onSubmit = (data) => {
     console.log(data);
-    userRegister(data.email, data.password);
+    registerUser(data.email, data.password);
   };
 
   return (
