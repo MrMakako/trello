@@ -1,15 +1,41 @@
 import "./signup_style.css";
 import { useForm } from "react-hook-form";
+import { yupResolver } from "@hookform/resolvers/yup";
+import * as Yup from "yup";
+import loginUser from "./requests/user.request";
+import { useHistory } from "react-router-dom";
 
 function Login() {
+  const formSchema = Yup.object().shape({
+    password: Yup.string()
+      .required("Password is required")
+      .min(8, "Password length should be at least 8 characters")
+      .max(100, "Password cannot exceed more than 100 characters"),
+    //////REACT FROM HOOK///
+  });
   const {
     register,
     handleSubmit,
     watch,
     formState: { errors },
-  } = useForm();
+  } = useForm({ mode: "onTouched", resolver: yupResolver(formSchema) });
 
-  const onSubmit = (data) => console.log(data);
+  async function onSubmit(data) {
+    const response = await loginUser(data.email, data.password);
+
+    // there is an error
+    if (response.message) {
+    } else {
+      // guardar el token en localStorage
+      localStorage.setItem("accessToken", response.accessToken);
+      localStorage.setItem("refreshToken", response.refreshToken);
+
+      // redirect al home screen
+      //history.push(`/?name=${response.name}`);
+      // "?name" + variable
+    }
+  }
+
   return (
     <div className="App">
       <section>
@@ -25,14 +51,15 @@ function Login() {
             >
               <input
                 type="text"
-                {...register("username")}
-                placeholder="Username"
+                {...register("email")}
+                placeholder="Email"
               ></input>
               <input
                 type="password"
                 {...register("password")}
                 placeholder="Password"
               ></input>
+              <p>{errors.password?.message}</p>
               <div className="custom-control custom-checkbox">
                 <input
                   type="checkbox"
