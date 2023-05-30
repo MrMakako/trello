@@ -10,18 +10,18 @@ function Home() {
         <div className="register">
           <div className="col-1">
             <div id="form" className="flex flex-col">
-              <Link to="./register">
-                <button className="btn">Register</button>
+              <Link className="btn" to="./register">
+                Register
               </Link>
-              <Link to="./login">
-                <button className="btn">Login</button>
+              <Link className="btn" to="./login">
+                Login
               </Link>
             </div>
           </div>
         </div>
       </section>
     </div>
-  );
+  ); //
 }
 
 export default Home;

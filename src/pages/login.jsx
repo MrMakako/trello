@@ -29,8 +29,9 @@ function Login() {
       // guardar el token en localStorage
       localStorage.setItem("accessToken", response.accessToken);
       localStorage.setItem("refreshToken", response.refreshToken);
+      //new java webtoken save
 
-      // redirect al home screen
+      // redirect to home screen
       //history.push(`/?name=${response.name}`);
       // "?name" + variable
     }

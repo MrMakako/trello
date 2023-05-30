@@ -80,6 +80,7 @@ input,
   color: #d4d4d4;
   font-size: 1em;
   cursor: pointer;
+ text-decoration: none; 
 }
 
 .flex {
