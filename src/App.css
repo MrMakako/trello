@@ -13,6 +13,11 @@
   }
 }
 
+.bar_header{
+  padding:0rem;
+
+}
+
 .App-header {
   background-color: #282c34;
   min-height: 100vh;

@@ -3,9 +3,11 @@ import { useForm } from "react-hook-form";
 import { yupResolver } from "@hookform/resolvers/yup";
 import * as Yup from "yup";
 import { loginUser } from "./requests/user.request";
-import { useHistory } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 
 function Login() {
+  const navigate = useNavigate();
+
   const formSchema = Yup.object().shape({
     password: Yup.string()
       .required("Password is required")
@@ -21,20 +23,25 @@ function Login() {
   } = useForm({ mode: "onTouched", resolver: yupResolver(formSchema) });
 
   async function onSubmit(data) {
-    const response = await loginUser(data.email, data.password);
+    const response = await loginUser(data.email, data.password).then(
+      (response) => {
+        // there is an error
+        if (response.data.succes) {
+        } else {
+          // guardar el token en localStorage
+          localStorage.setItem("accessToken", response.data.data.accessToken);
+          localStorage.setItem("refreshToken", response.data.data.refreshToken);
+          localStorage.setItem("email", response.data.data.email);
+          //new java webtoken save
+          // history.push(`/?name=${response.name}`);
 
-    // there is an error
-    if (response.message) {
-    } else {
-      // guardar el token en localStorage
-      localStorage.setItem("accessToken", response.accessToken);
-      localStorage.setItem("refreshToken", response.refreshToken);
-      //new java webtoken save
-
-      // redirect to home screen
-      //history.push(`/?name=${response.name}`);
-      // "?name" + variable
-    }
+          // redirect to home screen
+          navigate("/dashboard", { replace: true });
+          //history.push(`/?name=${response.name}`);
+          // "?name" + variable
+        }
+      }
+    );
   }
 
   return (

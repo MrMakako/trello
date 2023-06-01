@@ -12,14 +12,10 @@ export async function registerUser(email, password) {
 }
 
 export async function loginUser(email, password) {
-  axios
-    .post("http://localhost:3006/user/login", {
-      email: email,
-      password: password,
-    })
-    .then((rs) => {
-      console.log(rs);
-    });
+  return axios.post("http://localhost:3006/user/login", {
+    email: email,
+    password: password,
+  });
 }
 
 /*
