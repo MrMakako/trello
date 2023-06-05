@@ -20,12 +20,13 @@ body {
 }
 
 .App {
-  height: 100vh;
+  height: 80vh;
   display: flex;
   justify-content: center;
   align-items: center;
   text-align: center;
 }
+
 .column {
   float: center;
   width: 50%;
@@ -56,7 +57,8 @@ body {
   padding: 0.9em 1em;
 }
 
-#form > link,input,
+#form > link,
+input,
 .btn {
   border: 1px solid #e2e5e7;
   padding: 0.9em 1em;
@@ -72,11 +74,13 @@ body {
   cursor: pointer;
 }
 
-#form >Link, .btn {
+#form > Link,
+.btn {
   background-color: #2a0966;
   color: #d4d4d4;
   font-size: 1em;
   cursor: pointer;
+ text-decoration: none; 
 }
 
 .flex {
@@ -93,7 +97,7 @@ body {
   padding: 60px;
 }
 
-#Form>Link {
+#Form > Link {
   margin: auto;
   padding: 60px;
 }
@@ -124,4 +128,14 @@ body {
   .register .col-3 img {
     display: initial;
   }
+}
+
+.Home {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+header {
+  padding: 1rem;
 }
