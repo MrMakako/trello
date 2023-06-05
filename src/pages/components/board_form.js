@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 import {
   Box,
   Button,
@@ -12,9 +12,18 @@ import {
   colors,
   createTheme,
 } from "@mui/material";
-
+import { addBoard } from "../requests/board.request";
 export default function Board_form(props) {
   const { title, childre, openPopup, setOpenPopup } = props;
+  const [name, setName] = useState(" ");
+  const [desc, setDesc] = useState(" ");
+
+  function handleOnSubmit(name, desc) {
+    if (name !== "") {
+      addBoard(name, desc);
+      setOpenPopup(false);
+    }
+  }
 
   return (
     <Dialog open={openPopup} maxWidth="md">
@@ -40,8 +49,9 @@ export default function Board_form(props) {
               <TextField
                 type="text"
                 variant="outlined"
-                defaultValue="name"
                 fullWidth
+                value={name}
+                onChange={(e) => setName(e.target.value)}
               />
             </Grid>
             <Grid item>
@@ -51,6 +61,8 @@ export default function Board_form(props) {
                 fullWidth
                 multiline
                 rows={4}
+                value={desc}
+                onChange={(e) => setDesc(e.target.value)}
               ></TextField>
             </Grid>
             <Grid></Grid>
@@ -61,6 +73,7 @@ export default function Board_form(props) {
               backgroundColor: colors.purple[500],
             }}
             fullWidth
+            onClick={() => handleOnSubmit(name, desc)}
           >
             add
           </Button>

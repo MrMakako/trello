@@ -31,7 +31,7 @@ function Login() {
           // guardar el token en localStorage
           localStorage.setItem("accessToken", response.data.data.accessToken);
           localStorage.setItem("refreshToken", response.data.data.refreshToken);
-          localStorage.setItem("email", response.data.data.email);
+
           //new java webtoken save
           // history.push(`/?name=${response.name}`);
 

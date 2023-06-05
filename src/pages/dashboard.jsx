@@ -2,12 +2,15 @@ import axios from "axios";
 import StackList from "./components/stack";
 import { useState, useEffect } from "react";
 import { getBoards } from "./requests/board.request";
-
+import sendRequestToken from "./requests/jwt.request";
 import PrimarySearchAppBar from "./components/navbar";
 function Dashboard() {
   const [user_boards, setBoards] = useState([]);
+
   useEffect(() => {
-    getBoards(localStorage.getItem("email"), setBoards);
+    sendRequestToken().then((res) => {
+      getBoards(setBoards);
+    });
   }, []);
 
   return (
