@@ -10,10 +10,12 @@
 }
 
 .title {
-  font-size: 24px;
+  font-size: 60px;
   font-weight: bold;
-  color: #333;
+  color: #080808;
   text-align: center;
+  text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.3);
+  margin-bottom: 20px;
 }
 
 .button-container {
@@ -34,6 +36,36 @@
 
 .button-container button:hover {
   background-color: #45a049;
+}
+
+.list-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between; /* Alinear los elementos al extremo derecho */
+  margin-bottom: 8px;
+}
+
+.button-container-delete {
+  display: flex;
+  align-items: center;
+}
+
+.button-container-delete button {
+  padding: 8px 16px;
+  border: none;
+  border-radius: 4px;
+  background-color: #ff0000; /* Color rojo */
+  color: white;
+  cursor: pointer;
+}
+
+.button-container-delete button:hover {
+  background-color: #cc0000; /* Color rojo más oscuro en hover */
+}
+
+.list-header h2 {
+  margin: 0;
+  cursor: pointer;
 }
 
 .content-container {
@@ -57,7 +89,7 @@
   user-select: none;
   padding: 16px;
   margin-bottom: 8px;
-  background-color: grey;
+  background-color: gray !important; /* Cambiar el color de fondo a lightblue */
   color: white;
   cursor: grab;
 }

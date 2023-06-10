@@ -36,12 +36,6 @@ const getItemStyle = (isDragging, draggableStyle) => ({
   ...draggableStyle,
 });
 
-const getListStyle = (isDraggingOver) => ({
-  background: isDraggingOver ? "lightblue" : "lightgrey",
-  padding: grid,
-  width: 250,
-});
-
 export default function Board() {
   const [state, setState] = useState([]);
 
@@ -51,21 +45,42 @@ export default function Board() {
     if (!destination) {
       return;
     }
+
     const sInd = +source.droppableId;
     const dInd = +destination.droppableId;
+    const sList = state[sInd].items;
+    const dList = state[dInd].items;
 
     if (sInd === dInd) {
-      const items = reorder(state[sInd], source.index, destination.index);
+      const items = reorder(sList, source.index, destination.index);
       const newState = [...state];
-      newState[sInd] = items;
+      newState[sInd].items = items;
       setState(newState);
     } else {
-      const result = move(state[sInd], state[dInd], source, destination);
+      const result = move(sList, dList, source, destination);
       const newState = [...state];
-      newState[sInd] = result[sInd];
-      newState[dInd] = result[dInd];
-      setState(newState.filter((group) => group.length));
+      newState[sInd].items = result[sInd];
+      newState[dInd].items = result[dInd];
+      setState(newState);
     }
+  }
+
+  function handleListDelete(index) {
+    const newState = [...state];
+    newState.splice(index, 1);
+    setState(newState);
+  }
+
+  function handleListNameEdit(index, newName) {
+    const newState = [...state];
+    newState[index].name = newName;
+    setState(newState);
+  }
+
+  function handleEditMode(index, value) {
+    const newState = [...state];
+    newState[index].editMode = value;
+    setState(newState);
   }
 
   return (
@@ -77,24 +92,28 @@ export default function Board() {
         <button
           type="button"
           onClick={() => {
-            setState([...state, []]);
+            setState([...state, { name: "New List", items: [] }]);
           }}
         >
-          Add new group
+          Add new list
         </button>
-        <button
-          type="button"
-          onClick={() => {
-            setState([...state, getItems(1)]);
-          }}
-        >
-          Add new item
-        </button>
+        {state.length > 0 && (
+          <button
+            type="button"
+            onClick={() => {
+              const newState = [...state];
+              newState[0].items = [...newState[0].items, getItems(1)[0]];
+              setState(newState);
+            }}
+          >
+            Add new task
+          </button>
+        )}
       </div>
       <div className="content-container">
         <div style={{ display: "flex" }}>
           <DragDropContext onDragEnd={onDragEnd}>
-            {state.map((el, ind) => (
+            {state.map((list, ind) => (
               <Droppable key={ind} droppableId={`${ind}`}>
                 {(provided, snapshot) => (
                   <div
@@ -104,7 +123,21 @@ export default function Board() {
                     }`}
                     {...provided.droppableProps}
                   >
-                    {el.map((item, index) => (
+                    <div className="list-header">
+                      <h2 onClick={() => handleEditMode(ind, true)}>
+                        {list.name}
+                      </h2>
+                      <div className="button-container-delete">
+                        <button
+                          type="button"
+                          onClick={() => handleListDelete(ind)}
+                        >
+                          Delete
+                        </button>
+                      </div>
+                    </div>
+
+                    {list.items.map((item, index) => (
                       <Draggable
                         key={item.id}
                         draggableId={item.id}
@@ -130,13 +163,15 @@ export default function Board() {
                                 className="delete-button"
                                 onClick={() => {
                                   const newState = [...state];
-                                  newState[ind].splice(index, 1);
+                                  newState[ind].items.splice(index, 1);
                                   setState(
-                                    newState.filter((group) => group.length)
+                                    newState.filter(
+                                      (group) => group.items.length
+                                    )
                                   );
                                 }}
                               >
-                                delete
+                                Delete
                               </button>
                             </div>
                           </div>
