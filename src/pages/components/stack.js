@@ -7,6 +7,7 @@ import Card from "@mui/material/Card";
 import CardActions from "@mui/material/CardActions";
 import CardContent from "@mui/material/CardContent";
 import Typography from "@mui/material/Typography";
+import { colors } from "@mui/material";
 
 const bull = (
   <Box
@@ -17,6 +18,12 @@ const bull = (
   </Box>
 );
 
+const styles = {
+  "&:hover": {
+    color: "black",
+  },
+};
+
 function createCard(board_name) {
   return (
     <Card sx={{ minWidth: 275 }}>
@@ -26,7 +33,22 @@ function createCard(board_name) {
         </Typography>
       </CardContent>
       <CardActions>
-        <Button size="big">Go</Button>
+        <Button
+          sx={{
+            ...styles,
+            color: "white",
+            backgroundColor: colors.purple[500],
+          }}
+          size="big"
+        >
+          Go
+        </Button>
+        <Button
+          sx={{ ...styles, color: "White", backgroundColor: colors.red[500] }}
+          size="m"
+        >
+          Delete
+        </Button>
       </CardActions>
     </Card>
   );
