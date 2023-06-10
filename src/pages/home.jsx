@@ -1,4 +1,3 @@
-import "./signup_style.css";
 import { Link } from "react-router-dom";
 function Home() {
   return (

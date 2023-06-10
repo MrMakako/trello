@@ -1,5 +1,4 @@
 import { useState, React } from "react";
-import "./popup_style.css";
 
 function Popup(props) {
   const [text, setText] = useState("New Card");

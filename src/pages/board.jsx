@@ -1,6 +1,5 @@
 import { useState, useEffect, useRef, useMemo } from "react";
-import "./dashboard_style.css";
-import Popup from "./popup";
+import Popup from "./components/popup";
 import axios from "axios";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faEdit, faSave, faTrash } from "@fortawesome/free-solid-svg-icons";
