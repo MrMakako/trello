@@ -17,6 +17,17 @@ export function getBoards(setBoards) {
     setBoards(Response.data[0]);
   });
 }
+export function deleteBoard(board_id) {
+  console.log(localStorage.getItem("accessToken"));
+  Axios.post("/boards/all", {
+    headers: {
+      Authorization: `Bearer ${localStorage.getItem("accessToken")}`,
+      board_id: board_id,
+    },
+  }).then((Response) => {
+    console.log(Response.data);
+  });
+}
 
 export function addBoard(name, description) {
   const options = {
