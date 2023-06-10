@@ -1,255 +1,156 @@
-import { useState, useEffect, useRef, useMemo } from "react";
-import "./dashboard_style.css";
-import Popup from "./popup";
-import axios from "axios";
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faEdit, faSave, faTrash } from "@fortawesome/free-solid-svg-icons";
+import React, { useState } from "react";
+import { DragDropContext, Droppable, Draggable } from "react-beautiful-dnd";
+import "./dashboard_style.css"; // Importar el archivo CSS con los estilos
 
-function Board() {
-  const active = useRef(true);
-  const [buttonPopup, setButtonPopup] = useState(false);
-  const [tasks, setTasks] = useState([]);
+const getItems = (count, offset = 0) =>
+  Array.from({ length: count }, (v, k) => k).map((k) => ({
+    id: `item-${k + offset}-${new Date().getTime()}`,
+    content: `item ${k + offset}`,
+  }));
 
-  const [newTaskDesc, setNewTaskName] = useState("");
+const reorder = (list, startIndex, endIndex) => {
+  const result = Array.from(list);
+  const [removed] = result.splice(startIndex, 1);
+  result.splice(endIndex, 0, removed);
+  return result;
+};
 
-  function addTask(title, body) {
-    const newTask = { id: tasks.length + 1, title, body, list: 1 };
-    setTasks([...tasks, newTask]);
-  }
+const move = (source, destination, droppableSource, droppableDestination) => {
+  const sourceClone = Array.from(source);
+  const destClone = Array.from(destination);
+  const [removed] = sourceClone.splice(droppableSource.index, 1);
+  destClone.splice(droppableDestination.index, 0, removed);
+  const result = {};
+  result[droppableSource.droppableId] = sourceClone;
+  result[droppableDestination.droppableId] = destClone;
+  return result;
+};
 
-  function handleSaveClick() {
-    addTask("Name", newTaskDesc);
-    setNewTaskName("");
-  }
+const grid = 8;
 
-  const init = useMemo(() => {
-    axios
-      //
-      .get("http://localhost:3006/cards", { params: { board_id: 1 } })
-      .then((Response) => {
-        console.log(Response.data[0]);
-        setTasks(Response.data[0]);
-      });
-  }, []);
+const getItemStyle = (isDragging, draggableStyle) => ({
+  userSelect: "none",
+  padding: grid * 2,
+  margin: `0 0 ${grid}px 0`,
+  background: isDragging ? "lightgreen" : "grey",
+  ...draggableStyle,
+});
 
-  const getList = (list) => {
-    return tasks.filter((item) => item.list === list);
-  };
+const getListStyle = (isDraggingOver) => ({
+  background: isDraggingOver ? "lightblue" : "lightgrey",
+  padding: grid,
+  width: 250,
+});
 
-  function removeItem(id) {
-    setTasks(tasks.filter((item) => item.id !== id));
-  }
+export default function Board() {
+  const [state, setState] = useState([]);
 
-  const startDrag = (evt, item) => {
-    evt.dataTransfer.setData("itemID", item.id);
-    console.log(item);
-  };
-  async function storeCards() {
-    //will delete all cards
-    let myJson = [];
+  function onDragEnd(result) {
+    const { source, destination } = result;
 
-    for (let i = 0; i < tasks.length; i++) {
-      const element = tasks[i];
-      const newJson = {
-        name: element.title,
-        description: element.body,
-        position: element.id,
-        list_id: element.list,
-      };
-
-      myJson.push(newJson);
-    }
-    console.log(myJson);
-    await axios.post("http://localhost:3006/cards", myJson);
-  }
-
-  const draggingOver = (evt) => {
-    evt.preventDefault();
-  };
-
-  const onDrop = (evt, list) => {
-    // check if list is valid
-    if (list < 1) {
+    if (!destination) {
       return;
     }
+    const sInd = +source.droppableId;
+    const dInd = +destination.droppableId;
 
-    const itemID = evt.dataTransfer.getData("itemID");
-    const item = tasks.find((item) => item.id == itemID);
-    const oldList = item.list;
-
-    // get the index of the item being dragged
-    const oldIndex = tasks.findIndex((item) => item.id == itemID);
-
-    // get the new index of the item in the list
-    const newIndex = Array.from(evt.target.parentNode.children).indexOf(
-      evt.target
-    );
-
-    // remove the item from the old position
-    tasks.splice(oldIndex, 1);
-
-    // insert the item into the new position
-    tasks.splice(newIndex, 0, item);
-
-    // update the list property of the item
-    item.list = list;
-
-    // update the state with the new task list
-    setTasks([...tasks]);
-  };
+    if (sInd === dInd) {
+      const items = reorder(state[sInd], source.index, destination.index);
+      const newState = [...state];
+      newState[sInd] = items;
+      setState(newState);
+    } else {
+      const result = move(state[sInd], state[dInd], source, destination);
+      const newState = [...state];
+      newState[sInd] = result[sInd];
+      newState[dInd] = result[dInd];
+      setState(newState.filter((group) => group.length));
+    }
+  }
 
   return (
-    <>
-      <header>
-        <h1>Your Project Manager</h1>
-      </header>
-      <button className="delete-button" onClick={() => storeCards()}>
-        <FontAwesomeIcon icon={faSave} />
-      </button>
-      <div className="drag-and-drop">
-        <div className="column column--1" draggable droppable="true">
-          <div className="designed-container">
-            <h3>Backlog</h3>
-            <button className="add-button" onClick={() => setButtonPopup(true)}>
-              +
-            </button>
-            <Popup trigger={buttonPopup} setTrigger={setButtonPopup}>
-              <div className="new-card-info">
-                <input
-                  type="text"
-                  className="large-input"
-                  value={newTaskDesc}
-                  onChange={(event) => setNewTaskName(event.target.value)}
-                />
-                <button className="btn-save" onClick={handleSaveClick}>
-                  Save
-                </button>
-              </div>
-            </Popup>
-          </div>
-          <div
-            className="dd-zone"
-            droppable="true"
-            onDragOver={(evt) => draggingOver(evt)}
-            onDrop={(evt) => onDrop(evt, 1)}
-          >
-            {getList(1).map((item) => (
-              <div
-                className="dd-element"
-                key={item.id}
-                draggable
-                onDragStart={(evt) => startDrag(evt, item)}
-              >
-                <button className="edit-button">
-                  <FontAwesomeIcon icon={faEdit} />
-                </button>
-                <button
-                  className="delete-button"
-                  onClick={() => removeItem(item.id)}
-                >
-                  <FontAwesomeIcon icon={faTrash} />
-                </button>
-                <strong className="title">{item.title}</strong>
-                <p className="body">{item.body}</p>
-              </div>
+    <div className="board-container">
+      <div className="title-container">
+        <h1 className="title">Kanban Board</h1>
+      </div>
+      <div className="button-container">
+        <button
+          type="button"
+          onClick={() => {
+            setState([...state, []]);
+          }}
+        >
+          Add new group
+        </button>
+        <button
+          type="button"
+          onClick={() => {
+            setState([...state, getItems(1)]);
+          }}
+        >
+          Add new item
+        </button>
+      </div>
+      <div className="content-container">
+        <div style={{ display: "flex" }}>
+          <DragDropContext onDragEnd={onDragEnd}>
+            {state.map((el, ind) => (
+              <Droppable key={ind} droppableId={`${ind}`}>
+                {(provided, snapshot) => (
+                  <div
+                    ref={provided.innerRef}
+                    className={`list-container ${
+                      snapshot.isDraggingOver ? "dragging-over" : ""
+                    }`}
+                    {...provided.droppableProps}
+                  >
+                    {el.map((item, index) => (
+                      <Draggable
+                        key={item.id}
+                        draggableId={item.id}
+                        index={index}
+                      >
+                        {(provided, snapshot) => (
+                          <div
+                            ref={provided.innerRef}
+                            {...provided.draggableProps}
+                            {...provided.dragHandleProps}
+                            style={getItemStyle(
+                              snapshot.isDragging,
+                              provided.draggableProps.style
+                            )}
+                            className={`draggable-item ${
+                              snapshot.isDragging ? "dragging" : ""
+                            }`}
+                          >
+                            <div className="content-container">
+                              {item.content}
+                              <button
+                                type="button"
+                                className="delete-button"
+                                onClick={() => {
+                                  const newState = [...state];
+                                  newState[ind].splice(index, 1);
+                                  setState(
+                                    newState.filter((group) => group.length)
+                                  );
+                                }}
+                              >
+                                delete
+                              </button>
+                            </div>
+                          </div>
+                        )}
+                      </Draggable>
+                    ))}
+                    {provided.placeholder}
+                  </div>
+                )}
+              </Droppable>
             ))}
-          </div>
-        </div>
-
-        <div className="column column--2">
-          <h3>To do</h3>
-          <div
-            className="dd-zone"
-            droppable="true"
-            onDragOver={(evt) => draggingOver(evt)}
-            onDrop={(evt) => onDrop(evt, 2)}
-          >
-            {getList(2).map((item) => (
-              <div
-                className="dd-element"
-                key={item.id}
-                draggable
-                onDragStart={(evt) => startDrag(evt, item)}
-              >
-                <button className="edit-button">
-                  <FontAwesomeIcon icon={faEdit} />
-                </button>
-                <button
-                  className="delete-button"
-                  onClick={() => removeItem(item.id)}
-                >
-                  <FontAwesomeIcon icon={faTrash} />
-                </button>
-                <strong className="title">{item.title}</strong>
-                <p className="body">{item.body}</p>
-              </div>
-            ))}
-          </div>
-        </div>
-
-        <div className="column column--3">
-          <h3>In Progress</h3>
-          <div
-            className="dd-zone"
-            droppable="true"
-            onDragOver={(evt) => draggingOver(evt)}
-            onDrop={(evt) => onDrop(evt, 3)}
-          >
-            {getList(3).map((item) => (
-              <div
-                className="dd-element"
-                key={item.id}
-                draggable
-                onDragStart={(evt) => startDrag(evt, item)}
-              >
-                <button className="edit-button">
-                  <FontAwesomeIcon icon={faEdit} />
-                </button>
-                <button
-                  className="delete-button"
-                  onClick={() => removeItem(item.id)}
-                >
-                  <FontAwesomeIcon icon={faTrash} />
-                </button>
-                <strong className="title">{item.title}</strong>
-                <p className="body">{item.body}</p>
-              </div>
-            ))}
-          </div>
-        </div>
-
-        <div className="column column--4">
-          <h3>Designed</h3>
-          <div
-            className="dd-zone"
-            droppable="true"
-            onDragOver={(evt) => draggingOver(evt)}
-            onDrop={(evt) => onDrop(evt, 4)}
-          >
-            {getList(4).map((item) => (
-              <div
-                className="dd-element"
-                key={item.id}
-                draggable
-                onDragStart={(evt) => startDrag(evt, item)}
-              >
-                <button className="edit-button">
-                  <FontAwesomeIcon icon={faEdit} />
-                </button>
-                <button
-                  className="delete-button"
-                  onClick={() => removeItem(item.id)}
-                >
-                  <FontAwesomeIcon icon={faTrash} />
-                </button>
-                <strong className="title">{item.title}</strong>
-                <p className="body">{item.body}</p>
-              </div>
-            ))}
-          </div>
+          </DragDropContext>
         </div>
       </div>
-    </>
+    </div>
   );
 }
-export default Board;
