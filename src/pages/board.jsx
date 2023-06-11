@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import { useState, useMemo, useEffect } from "react";
 import { DragDropContext, Droppable, Draggable } from "react-beautiful-dnd";
 import "./dashboard_style.css"; // Importar el archivo CSS con los estilos
 
@@ -39,13 +39,15 @@ const getItemStyle = (isDragging, draggableStyle) => ({
 export default function Board() {
   const [state, setState] = useState([]);
 
+  useEffect(() => {});
+
   function onDragEnd(result) {
     const { source, destination } = result;
 
     if (!destination) {
       return;
     }
-
+    //Whats this?:
     const sInd = +source.droppableId;
     const dInd = +destination.droppableId;
     const sList = state[sInd].items;
@@ -82,6 +84,12 @@ export default function Board() {
     newState[index].editMode = value;
     setState(newState);
   }
+
+  const init = useMemo(() => {
+    //Method to add new List
+    //setState([...state, { name: "Mi lista", items: [] }]);
+    //Method to add new Task
+  }, []);
 
   return (
     <div className="board-container">
