@@ -1,4 +1,7 @@
 import { DragDropContext, Draggable, Droppable } from "@hello-pangea/dnd";
+import { Button, IconButton } from "@mui/material";
+import Delete from "@mui/icons-material/Delete";
+
 import React, { useState } from "react";
 export default function List(props) {
   const { columnId, column } = props;
@@ -38,6 +41,9 @@ export default function List(props) {
                         }}
                       >
                         {item.content}
+                        <IconButton>
+                          <Delete></Delete>
+                        </IconButton>
                       </div>
                     );
                   }}

@@ -3,7 +3,8 @@ import { DragDropContext } from "@hello-pangea/dnd";
 import List from "./components/list";
 import { getLists } from "./requests/list.request";
 import { getCards } from "./requests/card.request";
-import { ListItem } from "@mui/material";
+import { Button, ListItem } from "@mui/material";
+import AddBoxIcon from "@mui/icons-material/AddBox";
 
 const tasks = [
   { id: "1", content: "First task" },
@@ -121,6 +122,9 @@ export default function Board() {
                 <div style={{ margin: 8 }}>
                   <List columnId={columnId} column={column}></List>
                 </div>
+                <Button>
+                  <AddBoxIcon></AddBoxIcon>
+                </Button>
               </div>
             );
           })}
