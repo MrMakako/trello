@@ -1,198 +1,134 @@
-import { useState, useMemo, useEffect } from "react";
-import { DragDropContext, Droppable, Draggable } from "react-beautiful-dnd";
-import "./dashboard_style.css"; // Importar el archivo CSS con los estilos
-//https://www.youtube.com/watch?v=Vqa9NMzF3wc
-const getItems = (count, offset = 0) =>
-  Array.from({ length: count }, (v, k) => k).map((k) => ({
-    id: `item-${k + offset}-${new Date().getTime()}`,
-    content: `item ${k + offset}`,
-  }));
+import React, { useEffect, useState } from "react";
+import { DragDropContext } from "@hello-pangea/dnd";
+import List from "./components/list";
+import { getLists } from "./requests/list.request";
+import { getCards } from "./requests/card.request";
+import { Button, ListItem } from "@mui/material";
+import AddBoxIcon from "@mui/icons-material/AddBox";
 
-const reorder = (list, startIndex, endIndex) => {
-  const result = Array.from(list);
-  const [removed] = result.splice(startIndex, 1);
-  result.splice(endIndex, 0, removed);
-  return result;
+const tasks = [
+  { id: "1", content: "First task" },
+  { id: "2", content: "Second task" },
+  { id: "3", content: "Third task" },
+  { id: "4", content: "Fourth task" },
+  { id: "5", content: "Fifth task" },
+];
+
+const taskStatus = {
+  requested: {
+    name: "Requested",
+    items: [],
+  },
 };
 
-const move = (source, destination, droppableSource, droppableDestination) => {
-  const sourceClone = Array.from(source);
-  const destClone = Array.from(destination);
-  const [removed] = sourceClone.splice(droppableSource.index, 1);
-  destClone.splice(droppableDestination.index, 0, removed);
-  const result = {};
-  result[droppableSource.droppableId] = sourceClone;
-  result[droppableDestination.droppableId] = destClone;
-  return result;
+const onDragEnd = (result, columns, setColumns) => {
+  if (!result.destination) return;
+  const { source, destination } = result;
+
+  if (source.droppableId !== destination.droppableId) {
+    const sourceColumn = columns[source.droppableId];
+    const destColumn = columns[destination.droppableId];
+    const sourceItems = [...sourceColumn.items];
+    const destItems = [...destColumn.items];
+    const [removed] = sourceItems.splice(source.index, 1);
+    destItems.splice(destination.index, 0, removed);
+    setColumns({
+      ...columns,
+      [source.droppableId]: {
+        ...sourceColumn,
+        items: sourceItems,
+      },
+      [destination.droppableId]: {
+        ...destColumn,
+        items: destItems,
+      },
+    });
+  } else {
+    const column = columns[source.droppableId];
+    const copiedItems = [...column.items];
+    const [removed] = copiedItems.splice(source.index, 1);
+    copiedItems.splice(destination.index, 0, removed);
+    setColumns({
+      ...columns,
+      [source.droppableId]: {
+        ...column,
+        items: copiedItems,
+      },
+    });
+  }
 };
-
-const grid = 8;
-
-const getItemStyle = (isDragging, draggableStyle) => ({
-  userSelect: "none",
-  padding: grid * 2,
-  margin: `0 0 ${grid}px 0`,
-  background: isDragging ? "lightgreen" : "grey",
-  ...draggableStyle,
-});
 
 export default function Board() {
-  const [state, setState] = useState([]);
+  const [columns, setColumns] = useState(taskStatus);
+  const [list, setList] = useState([]);
 
-  useEffect(() => {});
+  async function load(board_id) {
+    const Lists = await getLists(board_id);
+    const Cards = await getCards(board_id);
+    console.log(Cards.data);
+    const newColumns = {};
 
-  function onDragEnd(result) {
-    const { source, destination } = result;
+    Lists.data.forEach((item) => {
+      const newCard = [];
+      console.log(item);
+      Cards.data.forEach((card) => {
+        if (card.list_id === item.id) {
+          newCard.push({
+            id: card.id.toString(),
+            content: card.description,
+          });
+        }
+      });
+      newColumns[item.id] = {
+        name: item.name,
+        items: newCard,
+      };
+      console.log(newColumns);
+      console.log(newCard);
+    });
 
-    if (!destination) {
-      return;
-    }
-    //Whats this?:
-    const sInd = +source.droppableId;
-    const dInd = +destination.droppableId;
-    const sList = state[sInd].items;
-    const dList = state[dInd].items;
+    setList(Lists.data);
 
-    if (sInd === dInd) {
-      const items = reorder(sList, source.index, destination.index);
-      const newState = [...state];
-      newState[sInd].items = items;
-      setState(newState);
-    } else {
-      const result = move(sList, dList, source, destination);
-      const newState = [...state];
-      newState[sInd].items = result[sInd];
-      newState[dInd].items = result[dInd];
-      setState(newState);
-    }
+    setColumns({ ...columns, ...newColumns });
   }
-
-  function handleListDelete(index) {
-    const newState = [...state];
-    newState.splice(index, 1);
-    setState(newState);
-  }
-
-  function handleListNameEdit(index, newName) {
-    const newState = [...state];
-    newState[index].name = newName;
-    setState(newState);
-  }
-
-  function handleEditMode(index, value) {
-    const newState = [...state];
-    newState[index].editMode = value;
-    setState(newState);
-  }
-
-  const init = useMemo(() => {
-    //Method to add new List
-    //setState([...state, { name: "Mi lista", items: [] }]);
-    //Method to add new Task
+  const init = useEffect(() => {
+    load(1);
   }, []);
+  ////
+  useEffect(() => {
+    console.log(columns);
+  });
 
   return (
-    <div className="board-container">
-      <div className="title-container">
-        <h1 className="title">Kanban Board</h1>
-      </div>
-      <div className="button-container">
-        <button
-          type="button"
-          onClick={() => {
-            setState([...state, { name: "New List", items: [] }]);
-          }}
+    <div>
+      <h1 style={{ textAlign: "center" }}>Jira Board</h1>
+      <div
+        style={{ display: "flex", justifyContent: "center", height: "100%" }}
+      >
+        <DragDropContext
+          onDragEnd={(result) => onDragEnd(result, columns, setColumns)}
         >
-          Add new list
-        </button>
-        {state.length > 0 && (
-          <button
-            type="button"
-            onClick={() => {
-              const newState = [...state];
-              newState[0].items = [...newState[0].items, getItems(1)[0]];
-              setState(newState);
-            }}
-          >
-            Add new task
-          </button>
-        )}
-      </div>
-      <div className="content-container">
-        <div style={{ display: "flex" }}>
-          <DragDropContext onDragEnd={onDragEnd}>
-            {state.map((list, ind) => (
-              <Droppable key={ind} droppableId={`${ind}`}>
-                {(provided, snapshot) => (
-                  <div
-                    ref={provided.innerRef}
-                    className={`list-container ${
-                      snapshot.isDraggingOver ? "dragging-over" : ""
-                    }`}
-                    {...provided.droppableProps}
-                  >
-                    <div className="list-header">
-                      <h2 onClick={() => handleEditMode(ind, true)}>
-                        {list.name}
-                      </h2>
-                      <div className="button-container-delete">
-                        <button
-                          type="button"
-                          onClick={() => handleListDelete(ind)}
-                        >
-                          Delete
-                        </button>
-                      </div>
-                    </div>
-
-                    {list.items.map((item, index) => (
-                      <Draggable
-                        key={item.id}
-                        draggableId={item.id}
-                        index={index}
-                      >
-                        {(provided, snapshot) => (
-                          <div
-                            ref={provided.innerRef}
-                            {...provided.draggableProps}
-                            {...provided.dragHandleProps}
-                            style={getItemStyle(
-                              snapshot.isDragging,
-                              provided.draggableProps.style
-                            )}
-                            className={`draggable-item ${
-                              snapshot.isDragging ? "dragging" : ""
-                            }`}
-                          >
-                            <div className="content-container">
-                              {item.content}
-                              <button
-                                type="button"
-                                className="delete-button"
-                                onClick={() => {
-                                  const newState = [...state];
-                                  newState[ind].items.splice(index, 1);
-                                  setState(
-                                    newState.filter(
-                                      (group) => group.items.length
-                                    )
-                                  );
-                                }}
-                              >
-                                Delete
-                              </button>
-                            </div>
-                          </div>
-                        )}
-                      </Draggable>
-                    ))}
-                    {provided.placeholder}
-                  </div>
-                )}
-              </Droppable>
-            ))}
-          </DragDropContext>
-        </div>
+          {Object.entries(columns).map(([columnId, column], index) => {
+            return (
+              <div
+                style={{
+                  display: "flex",
+                  flexDirection: "column",
+                  alignItems: "center",
+                }}
+                key={columnId}
+              >
+                <h2>{column.name}</h2>
+                <div style={{ margin: 8 }}>
+                  <List columnId={columnId} column={column}></List>
+                </div>
+                <Button>
+                  <AddBoxIcon></AddBoxIcon>
+                </Button>
+              </div>
+            );
+          })}
+        </DragDropContext>
       </div>
     </div>
   );

@@ -1,12 +1,13 @@
-import "./signup_style.css";
 import { useForm } from "react-hook-form";
 import { yupResolver } from "@hookform/resolvers/yup";
 import * as Yup from "yup";
 import { loginUser } from "./requests/user.request";
-import { useNavigate } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
+import { useState } from "react";
 
 function Login() {
   const navigate = useNavigate();
+  const [LoginError, setLoginError] = useState(false);
 
   const formSchema = Yup.object().shape({
     password: Yup.string()
@@ -23,27 +24,40 @@ function Login() {
   } = useForm({ mode: "onTouched", resolver: yupResolver(formSchema) });
 
   async function onSubmit(data) {
-    const response = await loginUser(data.email, data.password).then(
-      (response) => {
-        // there is an error
-        if (response.data.succes) {
-        } else {
-          // guardar el token en localStorage
-          localStorage.setItem("accessToken", response.data.data.accessToken);
-          localStorage.setItem("refreshToken", response.data.data.refreshToken);
-
-          //new java webtoken save
-          // history.push(`/?name=${response.name}`);
-
-          // redirect to home screen
-          navigate("/dashboard", { replace: true });
-          //history.push(`/?name=${response.name}`);
-          // "?name" + variable
+    try {
+      const response = await loginUser(data.email, data.password).then(
+        (response) => {
+          if (!response.data.succes) {
+            // guardar el token en localStorage
+            localStorage.setItem("accessToken", response.data.data.accessToken);
+            localStorage.setItem(
+              "refreshToken",
+              response.data.data.refreshToken
+            );
+            setLoginError(false);
+            navigate("/dashboard", { replace: true });
+          }
         }
-      }
-    );
+      );
+    } catch (error) {
+      console.log(error);
+      console.log("BAD-REQUEST ACCOUNT DOESNT EXIST");
+      setLoginError(true);
+    }
   }
+  function LoginErrorMessage(props) {
+    const isLoginFailed = props.isLoginFailed;
 
+    if (isLoginFailed) {
+      return (
+        <p>
+          Email or Password Wrong <Link to="../register">Register</Link>
+        </p>
+      );
+    } else {
+      return <></>;
+    }
+  }
   return (
     <div className="App">
       <section>
@@ -69,6 +83,7 @@ function Login() {
                 placeholder="Password"
               ></input>
               <p>{errors.password?.message}</p>
+              <LoginErrorMessage isLoginFailed={LoginError} />
               <div className="custom-control custom-checkbox">
                 <input
                   type="checkbox"

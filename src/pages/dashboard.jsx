@@ -16,8 +16,7 @@ function Dashboard() {
   return (
     <>
       <div>
-        <header className="bar_header">{PrimarySearchAppBar()}</header>
-
+        <header>{PrimarySearchAppBar()}</header>
         <h1>My Boards</h1>
         <div>{StackList(user_boards)}</div>
       </div>
