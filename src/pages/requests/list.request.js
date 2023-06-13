@@ -6,9 +6,9 @@ const Axios = axios.create({
   timeout: 1000,
 });
 
-export async function getCards(board_id) {
+export async function getLists(board_id) {
   console.log(localStorage.getItem("accessToken"));
-  return await Axios.get("/cards/all", {
+  return await Axios.get("/lists/all", {
     headers: {
       Authorization: `Bearer ${localStorage.getItem("accessToken")}`,
       board_id: board_id,

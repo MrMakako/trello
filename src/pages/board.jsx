@@ -1,254 +1,135 @@
-import { useState, useEffect, useRef, useMemo } from "react";
-import Popup from "./components/popup";
-import axios from "axios";
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faEdit, faSave, faTrash } from "@fortawesome/free-solid-svg-icons";
+import React, { useEffect, useState } from "react";
+import { DragDropContext } from "@hello-pangea/dnd";
+import List from "./components/list";
+import { getLists } from "./requests/list.request";
+import { getCards } from "./requests/card.request";
+import { Button, ListItem } from "@mui/material";
+import AddBoxIcon from "@mui/icons-material/AddBox";
 
-function Board() {
-  const active = useRef(true);
-  const [buttonPopup, setButtonPopup] = useState(false);
-  const [tasks, setTasks] = useState([]);
+const tasks = [
+  { id: "1", content: "First task" },
+  { id: "2", content: "Second task" },
+  { id: "3", content: "Third task" },
+  { id: "4", content: "Fourth task" },
+  { id: "5", content: "Fifth task" },
+];
 
-  const [newTaskDesc, setNewTaskName] = useState("");
+const taskStatus = {
+  requested: {
+    name: "Requested",
+    items: [],
+  },
+};
 
-  function addTask(title, body) {
-    const newTask = { id: tasks.length + 1, title, body, list: 1 };
-    setTasks([...tasks, newTask]);
+const onDragEnd = (result, columns, setColumns) => {
+  if (!result.destination) return;
+  const { source, destination } = result;
+
+  if (source.droppableId !== destination.droppableId) {
+    const sourceColumn = columns[source.droppableId];
+    const destColumn = columns[destination.droppableId];
+    const sourceItems = [...sourceColumn.items];
+    const destItems = [...destColumn.items];
+    const [removed] = sourceItems.splice(source.index, 1);
+    destItems.splice(destination.index, 0, removed);
+    setColumns({
+      ...columns,
+      [source.droppableId]: {
+        ...sourceColumn,
+        items: sourceItems,
+      },
+      [destination.droppableId]: {
+        ...destColumn,
+        items: destItems,
+      },
+    });
+  } else {
+    const column = columns[source.droppableId];
+    const copiedItems = [...column.items];
+    const [removed] = copiedItems.splice(source.index, 1);
+    copiedItems.splice(destination.index, 0, removed);
+    setColumns({
+      ...columns,
+      [source.droppableId]: {
+        ...column,
+        items: copiedItems,
+      },
+    });
   }
+};
 
-  function handleSaveClick() {
-    addTask("Name", newTaskDesc);
-    setNewTaskName("");
-  }
+export default function Board() {
+  const [columns, setColumns] = useState(taskStatus);
+  const [list, setList] = useState([]);
 
-  const init = useMemo(() => {
-    axios
-      //
-      .get("http://localhost:3006/cards", { params: { board_id: 1 } })
-      .then((Response) => {
-        console.log(Response.data[0]);
-        setTasks(Response.data[0]);
+  async function load(board_id) {
+    const Lists = await getLists(board_id);
+    const Cards = await getCards(board_id);
+    console.log(Cards.data);
+    const newColumns = {};
+
+    Lists.data.forEach((item) => {
+      const newCard = [];
+      console.log(item);
+      Cards.data.forEach((card) => {
+        if (card.list_id === item.id) {
+          newCard.push({
+            id: card.id.toString(),
+            content: card.description,
+          });
+        }
       });
-  }, []);
-
-  const getList = (list) => {
-    return tasks.filter((item) => item.list === list);
-  };
-
-  function removeItem(id) {
-    setTasks(tasks.filter((item) => item.id !== id));
-  }
-
-  const startDrag = (evt, item) => {
-    evt.dataTransfer.setData("itemID", item.id);
-    console.log(item);
-  };
-  async function storeCards() {
-    //will delete all cards
-    let myJson = [];
-
-    for (let i = 0; i < tasks.length; i++) {
-      const element = tasks[i];
-      const newJson = {
-        name: element.title,
-        description: element.body,
-        position: element.id,
-        list_id: element.list,
+      newColumns[item.id] = {
+        name: item.name,
+        items: newCard,
       };
+      console.log(newColumns);
+      console.log(newCard);
+    });
 
-      myJson.push(newJson);
-    }
-    console.log(myJson);
-    await axios.post("http://localhost:3006/cards", myJson);
+    setList(Lists.data);
+
+    setColumns({ ...columns, ...newColumns });
   }
-
-  const draggingOver = (evt) => {
-    evt.preventDefault();
-  };
-
-  const onDrop = (evt, list) => {
-    // check if list is valid
-    if (list < 1) {
-      return;
-    }
-
-    const itemID = evt.dataTransfer.getData("itemID");
-    const item = tasks.find((item) => item.id == itemID);
-    const oldList = item.list;
-
-    // get the index of the item being dragged
-    const oldIndex = tasks.findIndex((item) => item.id == itemID);
-
-    // get the new index of the item in the list
-    const newIndex = Array.from(evt.target.parentNode.children).indexOf(
-      evt.target
-    );
-
-    // remove the item from the old position
-    tasks.splice(oldIndex, 1);
-
-    // insert the item into the new position
-    tasks.splice(newIndex, 0, item);
-
-    // update the list property of the item
-    item.list = list;
-
-    // update the state with the new task list
-    setTasks([...tasks]);
-  };
+  const init = useEffect(() => {
+    load(1);
+  }, []);
+  ////
+  useEffect(() => {
+    console.log(columns);
+  });
 
   return (
-    <>
-      <header>
-        <h1>Your Project Manager</h1>
-      </header>
-      <button className="delete-button" onClick={() => storeCards()}>
-        <FontAwesomeIcon icon={faSave} />
-      </button>
-      <div className="drag-and-drop">
-        <div className="column column--1" draggable droppable="true">
-          <div className="designed-container">
-            <h3>Backlog</h3>
-            <button className="add-button" onClick={() => setButtonPopup(true)}>
-              +
-            </button>
-            <Popup trigger={buttonPopup} setTrigger={setButtonPopup}>
-              <div className="new-card-info">
-                <input
-                  type="text"
-                  className="large-input"
-                  value={newTaskDesc}
-                  onChange={(event) => setNewTaskName(event.target.value)}
-                />
-                <button className="btn-save" onClick={handleSaveClick}>
-                  Save
-                </button>
-              </div>
-            </Popup>
-          </div>
-          <div
-            className="dd-zone"
-            droppable="true"
-            onDragOver={(evt) => draggingOver(evt)}
-            onDrop={(evt) => onDrop(evt, 1)}
-          >
-            {getList(1).map((item) => (
+    <div>
+      <h1 style={{ textAlign: "center" }}>Jira Board</h1>
+      <div
+        style={{ display: "flex", justifyContent: "center", height: "100%" }}
+      >
+        <DragDropContext
+          onDragEnd={(result) => onDragEnd(result, columns, setColumns)}
+        >
+          {Object.entries(columns).map(([columnId, column], index) => {
+            return (
               <div
-                className="dd-element"
-                key={item.id}
-                draggable
-                onDragStart={(evt) => startDrag(evt, item)}
+                style={{
+                  display: "flex",
+                  flexDirection: "column",
+                  alignItems: "center",
+                }}
+                key={columnId}
               >
-                <button className="edit-button">
-                  <FontAwesomeIcon icon={faEdit} />
-                </button>
-                <button
-                  className="delete-button"
-                  onClick={() => removeItem(item.id)}
-                >
-                  <FontAwesomeIcon icon={faTrash} />
-                </button>
-                <strong className="title">{item.title}</strong>
-                <p className="body">{item.body}</p>
+                <h2>{column.name}</h2>
+                <div style={{ margin: 8 }}>
+                  <List columnId={columnId} column={column}></List>
+                </div>
+                <Button>
+                  <AddBoxIcon></AddBoxIcon>
+                </Button>
               </div>
-            ))}
-          </div>
-        </div>
-
-        <div className="column column--2">
-          <h3>To do</h3>
-          <div
-            className="dd-zone"
-            droppable="true"
-            onDragOver={(evt) => draggingOver(evt)}
-            onDrop={(evt) => onDrop(evt, 2)}
-          >
-            {getList(2).map((item) => (
-              <div
-                className="dd-element"
-                key={item.id}
-                draggable
-                onDragStart={(evt) => startDrag(evt, item)}
-              >
-                <button className="edit-button">
-                  <FontAwesomeIcon icon={faEdit} />
-                </button>
-                <button
-                  className="delete-button"
-                  onClick={() => removeItem(item.id)}
-                >
-                  <FontAwesomeIcon icon={faTrash} />
-                </button>
-                <strong className="title">{item.title}</strong>
-                <p className="body">{item.body}</p>
-              </div>
-            ))}
-          </div>
-        </div>
-
-        <div className="column column--3">
-          <h3>In Progress</h3>
-          <div
-            className="dd-zone"
-            droppable="true"
-            onDragOver={(evt) => draggingOver(evt)}
-            onDrop={(evt) => onDrop(evt, 3)}
-          >
-            {getList(3).map((item) => (
-              <div
-                className="dd-element"
-                key={item.id}
-                draggable
-                onDragStart={(evt) => startDrag(evt, item)}
-              >
-                <button className="edit-button">
-                  <FontAwesomeIcon icon={faEdit} />
-                </button>
-                <button
-                  className="delete-button"
-                  onClick={() => removeItem(item.id)}
-                >
-                  <FontAwesomeIcon icon={faTrash} />
-                </button>
-                <strong className="title">{item.title}</strong>
-                <p className="body">{item.body}</p>
-              </div>
-            ))}
-          </div>
-        </div>
-
-        <div className="column column--4">
-          <h3>Designed</h3>
-          <div
-            className="dd-zone"
-            droppable="true"
-            onDragOver={(evt) => draggingOver(evt)}
-            onDrop={(evt) => onDrop(evt, 4)}
-          >
-            {getList(4).map((item) => (
-              <div
-                className="dd-element"
-                key={item.id}
-                draggable
-                onDragStart={(evt) => startDrag(evt, item)}
-              >
-                <button className="edit-button">
-                  <FontAwesomeIcon icon={faEdit} />
-                </button>
-                <button
-                  className="delete-button"
-                  onClick={() => removeItem(item.id)}
-                >
-                  <FontAwesomeIcon icon={faTrash} />
-                </button>
-                <strong className="title">{item.title}</strong>
-                <p className="body">{item.body}</p>
-              </div>
-            ))}
-          </div>
-        </div>
+            );
+          })}
+        </DragDropContext>
       </div>
-    </>
+    </div>
   );
 }
-export default Board;
