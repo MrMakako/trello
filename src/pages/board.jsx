@@ -1,5 +1,9 @@
 import React, { useEffect, useState } from "react";
-import { DragDropContext, Draggable, Droppable } from "@hello-pangea/dnd";
+import { DragDropContext } from "@hello-pangea/dnd";
+import List from "./components/list";
+import { getLists } from "./requests/list.request";
+import { getCards } from "./requests/card.request";
+import { ListItem } from "@mui/material";
 
 const tasks = [
   { id: "1", content: "First task" },
@@ -12,7 +16,7 @@ const tasks = [
 const taskStatus = {
   requested: {
     name: "Requested",
-    items: tasks,
+    items: [],
   },
 };
 
@@ -55,9 +59,43 @@ const onDragEnd = (result, columns, setColumns) => {
 
 export default function Board() {
   const [columns, setColumns] = useState(taskStatus);
+  const [list, setList] = useState([]);
 
+  async function load(board_id) {
+    const Lists = await getLists(board_id);
+    const Cards = await getCards(board_id);
+    console.log(Cards.data);
+    const newColumns = {};
+
+    Lists.data.forEach((item) => {
+      const newCard = [];
+      console.log(item);
+      Cards.data.forEach((card) => {
+        if (card.list_id === item.id) {
+          newCard.push({
+            id: card.id.toString(),
+            content: card.description,
+          });
+        }
+      });
+      newColumns[item.id] = {
+        name: item.name,
+        items: newCard,
+      };
+      console.log(newColumns);
+      console.log(newCard);
+    });
+
+    setList(Lists.data);
+
+    setColumns({ ...columns, ...newColumns });
+  }
+  const init = useEffect(() => {
+    load(1);
+  }, []);
+  ////
   useEffect(() => {
-    //  setColumns([{ id: 1, name: "List 2", items: tasks }]);
+    console.log(columns);
   });
 
   return (
@@ -81,58 +119,7 @@ export default function Board() {
               >
                 <h2>{column.name}</h2>
                 <div style={{ margin: 8 }}>
-                  <Droppable droppableId={columnId} key={columnId}>
-                    {(provided, snapshot) => {
-                      return (
-                        <div
-                          {...provided.droppableProps}
-                          ref={provided.innerRef}
-                          style={{
-                            background: snapshot.isDraggingOver
-                              ? "lightblue"
-                              : "lightgrey",
-                            padding: 4,
-                            width: 250,
-                            minHeight: 500,
-                          }}
-                        >
-                          {column.items.map((item, index) => {
-                            return (
-                              <Draggable
-                                key={item.id}
-                                draggableId={item.id}
-                                index={index}
-                              >
-                                {(provided, snapshot) => {
-                                  return (
-                                    <div
-                                      ref={provided.innerRef}
-                                      {...provided.draggableProps}
-                                      {...provided.dragHandleProps}
-                                      style={{
-                                        userSelect: "none",
-                                        padding: 16,
-                                        margin: "0 0 8px 0",
-                                        minHeight: "50px",
-                                        backgroundColor: snapshot.isDragging
-                                          ? "#263B4A"
-                                          : "#456C86",
-                                        color: "white",
-                                        ...provided.draggableProps.style,
-                                      }}
-                                    >
-                                      {item.content}
-                                    </div>
-                                  );
-                                }}
-                              </Draggable>
-                            );
-                          })}
-                          {provided.placeholder}
-                        </div>
-                      );
-                    }}
-                  </Droppable>
+                  <List columnId={columnId} column={column}></List>
                 </div>
               </div>
             );
