@@ -12,8 +12,8 @@ import {
   colors,
   createTheme,
 } from "@mui/material";
-import { addBoard } from "../requests/board.request";
-export default function Board_form(props) {
+import { addBoard } from "../../requests/board.request";
+export default function CardForm(props) {
   const { title, childre, openPopup, setOpenPopup } = props;
   const [name, setName] = useState(" ");
   const [desc, setDesc] = useState(" ");
