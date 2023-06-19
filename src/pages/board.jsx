@@ -5,7 +5,7 @@ import { getLists } from "./requests/list.request";
 import { getCards } from "./requests/card.request";
 import { Button, ListItem } from "@mui/material";
 import AddBoxIcon from "@mui/icons-material/AddBox";
-import { useSearchParams } from "react-router-dom";
+import { useSearchParams, useParams } from "react-router-dom";
 
 const tasks = [
   { id: "1", content: "First task" },
@@ -60,12 +60,14 @@ const onDragEnd = (result, columns, setColumns) => {
 };
 
 export default function Board() {
+  const { main_board_name } = useParams();
   const [searchParams] = useSearchParams();
 
   const [columns, setColumns] = useState(taskStatus);
   const [list, setList] = useState([]);
 
   async function load(board_id) {
+    console.log("username:" + main_board_name);
     const Lists = await getLists(board_id);
     const Cards = await getCards(board_id);
     console.log(Cards.data);
@@ -104,7 +106,7 @@ export default function Board() {
 
   return (
     <div>
-      <h1 style={{ textAlign: "center" }}>Jira Board</h1>
+      <h1 style={{ textAlign: "center" }}>{main_board_name}</h1>
       <div
         style={{ display: "flex", justifyContent: "center", height: "100%" }}
       >
