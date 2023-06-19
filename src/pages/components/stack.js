@@ -9,6 +9,7 @@ import CardContent from "@mui/material/CardContent";
 import Typography from "@mui/material/Typography";
 import { colors } from "@mui/material";
 import { deleteBoard } from "../requests/board.request";
+import { Link, useNavigate } from "react-router-dom";
 const bull = (
   <Box
     component="span"
@@ -22,7 +23,13 @@ const styles = {
   },
 };
 
-function createCard(board_name) {
+function goToBoard(board_id, board_name, navigate) {
+  navigate("/dashboard/" + board_name + "?board_id=" + board_id);
+
+  console.log(board_id);
+}
+
+function createCard(board_name, board_id, navigate) {
   return (
     <Card sx={{ minWidth: 275 }}>
       <CardContent>
@@ -38,6 +45,9 @@ function createCard(board_name) {
             backgroundColor: colors.purple[500],
           }}
           size="big"
+          onClick={() => {
+            goToBoard(board_id, board_name, navigate);
+          }}
         >
           Go
         </Button>
@@ -52,11 +62,12 @@ function createCard(board_name) {
   );
 }
 function Pile(user_boards) {
+  const navigate = useNavigate();
   return (
     <Box sx={{ width: "100%" }}>
       <Stack spacing={2}>
         {user_boards.map((data) => (
-          <>{createCard(data.name)}</>
+          <>{createCard(data.name, data.id, navigate)}</>
         ))}
       </Stack>
     </Box>

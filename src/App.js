@@ -22,6 +22,7 @@ import SignUp from "./pages/signUp";
 import Dashboard from "./pages/dashboard";
 
 import Home from "./pages/home";
+import { useState } from "react";
 
 function App() {
   const router = createBrowserRouter(

@@ -4,12 +4,14 @@ import { useState, useEffect } from "react";
 import { getBoards } from "./requests/board.request";
 import sendRequestToken from "./requests/jwt.request";
 import PrimarySearchAppBar from "./components/navbar";
+
 function Dashboard() {
   const [user_boards, setBoards] = useState([]);
 
   useEffect(() => {
     sendRequestToken().then((res) => {
       getBoards(setBoards);
+      console.log(user_boards);
     });
   }, []);
 

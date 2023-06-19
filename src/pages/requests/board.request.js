@@ -13,7 +13,7 @@ export function getBoards(setBoards) {
       Authorization: `Bearer ${localStorage.getItem("accessToken")}`,
     },
   }).then((Response) => {
-    console.log(Response.data);
+    console.log(Response.data[0]);
     setBoards(Response.data[0]);
   });
 }

@@ -5,6 +5,7 @@ import { getLists } from "./requests/list.request";
 import { getCards } from "./requests/card.request";
 import { Button, ListItem } from "@mui/material";
 import AddBoxIcon from "@mui/icons-material/AddBox";
+import { useSearchParams } from "react-router-dom";
 
 const tasks = [
   { id: "1", content: "First task" },
@@ -59,6 +60,8 @@ const onDragEnd = (result, columns, setColumns) => {
 };
 
 export default function Board() {
+  const [searchParams] = useSearchParams();
+
   const [columns, setColumns] = useState(taskStatus);
   const [list, setList] = useState([]);
 
@@ -92,7 +95,7 @@ export default function Board() {
     setColumns({ ...columns, ...newColumns });
   }
   const init = useEffect(() => {
-    load(1);
+    load(searchParams.get("board_id"));
   }, []);
   ////
   useEffect(() => {
