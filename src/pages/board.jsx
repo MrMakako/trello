@@ -17,7 +17,7 @@ const tasks = [
 
 const taskStatus = {
   requested: {
-    name: "Requested",
+    name: "Backlog",
     items: [],
   },
 };
@@ -104,9 +104,45 @@ export default function Board() {
     console.log(columns);
   });
 
+  const addList = () => {
+    const newList = {
+      id: Date.now().toString(),
+      name: "New List",
+      items: [],
+    };
+    setColumns((prevColumns) => ({
+      ...prevColumns,
+      [newList.id]: newList,
+    }));
+  };
+
+  const addTask = (columnId) => {
+    const newCard = {
+      id: Date.now().toString(),
+      content: "new card",
+    };
+
+    setColumns((prevColumns) => {
+      const column = prevColumns[columnId];
+      const updatedItems = [...column.items, newCard];
+
+      return {
+        ...prevColumns,
+        [columnId]: {
+          ...column,
+          items: updatedItems,
+        },
+      };
+    });
+  };
+
   return (
     <div>
       <h1 style={{ textAlign: "center" }}>{main_board_name}</h1>
+      <div style={{ display: "flex", justifyContent: "center" }}>
+        <Button onClick={addList}>Add List</Button>
+      </div>
+
       <div
         style={{ display: "flex", justifyContent: "center", height: "100%" }}
       >
@@ -127,8 +163,8 @@ export default function Board() {
                 <div style={{ margin: 8 }}>
                   <List columnId={columnId} column={column}></List>
                 </div>
-                <Button>
-                  <AddBoxIcon></AddBoxIcon>
+                <Button onClick={() => addTask(columnId)}>
+                  <AddBoxIcon />
                 </Button>
               </div>
             );
