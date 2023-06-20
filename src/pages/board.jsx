@@ -7,6 +7,11 @@ import { Button, ListItem } from "@mui/material";
 import AddBoxIcon from "@mui/icons-material/AddBox";
 import { useSearchParams, useParams } from "react-router-dom";
 import CardForm from "./components/forms/cardForm";
+import Dialog from "@mui/material/Dialog";
+import DialogTitle from "@mui/material/DialogTitle";
+import DialogContent from "@mui/material/DialogContent";
+import DialogActions from "@mui/material/DialogActions";
+import TextField from "@mui/material/TextField";
 
 const taskStatus = {
   requested: {
@@ -56,6 +61,8 @@ export default function Board() {
   const { main_board_name } = useParams();
   const [searchParams] = useSearchParams();
   const [openPopup, setOpenPopup] = useState(false);
+  const [showAddListPopup, setShowAddListPopup] = useState(false);
+  const [newListName, setNewListName] = useState("");
 
   const [columns, setColumns] = useState(taskStatus);
   const [list, setList] = useState([]);
@@ -99,9 +106,13 @@ export default function Board() {
   });
 
   const addList = () => {
+    setShowAddListPopup(true);
+  };
+
+  const handleAddList = (name) => {
     const newList = {
       id: Date.now().toString(),
-      name: "New List",
+      name: name,
       items: [],
     };
     setColumns((prevColumns) => ({
@@ -171,6 +182,32 @@ export default function Board() {
         </DragDropContext>
       </div>
       <CardForm openPopup={openPopup} setOpenPopup={setOpenPopup} />
+
+      <Dialog
+        open={showAddListPopup}
+        onClose={() => setShowAddListPopup(false)}
+      >
+        <DialogTitle>Add New List</DialogTitle>
+        <DialogContent>
+          <TextField
+            label="List Name"
+            value={newListName}
+            onChange={(e) => setNewListName(e.target.value)}
+          />
+        </DialogContent>
+        <DialogActions>
+          <Button onClick={() => setShowAddListPopup(false)}>Cancel</Button>
+          <Button
+            onClick={() => {
+              handleAddList(newListName);
+              setShowAddListPopup(false);
+              setNewListName("");
+            }}
+          >
+            Add
+          </Button>
+        </DialogActions>
+      </Dialog>
     </div>
   );
 }
