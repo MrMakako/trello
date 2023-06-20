@@ -19,7 +19,9 @@ function Dashboard() {
     <>
       <div>
         <header>{PrimarySearchAppBar()}</header>
-        <h1>My Boards</h1>
+        <div>
+          <h1>My Boards</h1>
+        </div>
         <div>{StackList(user_boards)}</div>
       </div>
     </>

@@ -12,15 +12,15 @@ import {
   colors,
   createTheme,
 } from "@mui/material";
-import { addBoard } from "../../requests/board.request";
+import { addCard } from "../../requests/card.request";
 export default function CardForm(props) {
-  const { title, childre, openPopup, setOpenPopup } = props;
+  const { list_id, position, openPopup, setOpenPopup } = props;
   const [name, setName] = useState(" ");
   const [desc, setDesc] = useState(" ");
 
   function handleOnSubmit(name, desc) {
     if (name !== "") {
-      addBoard(name, desc);
+      addCard(name, desc, list_id, position);
       setOpenPopup(false);
     }
   }
@@ -28,7 +28,7 @@ export default function CardForm(props) {
   return (
     <Dialog open={openPopup} maxWidth="md">
       <DialogTitle>
-        <div>New Table</div>
+        <div>New Card</div>
         <Box textAlign="right">
           {" "}
           <Button

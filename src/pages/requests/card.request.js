@@ -15,3 +15,20 @@ export async function getCards(board_id) {
     },
   });
 }
+
+export function addCard(name, desc, list_id, position) {
+  const options = {
+    method: "POST",
+    url: "/cards/add",
+    headers: { Authorization: `Bearer ${localStorage.getItem("accessToken")}` },
+    data: [
+      {
+        name,
+        desc,
+        list_id,
+        position,
+      },
+    ],
+  };
+  Axios.request(options);
+}

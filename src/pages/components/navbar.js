@@ -10,6 +10,7 @@ import BoardForm from "../components/forms/boardForm";
 import { Button, Tab, Tabs } from "@mui/material";
 import LogoutIcon from "@mui/icons-material/Logout";
 import { useNavigate } from "react-router-dom";
+
 export default function PrimarySearchAppBar() {
   const [openPopup, setOpenPopup] = React.useState(false);
   const [anchorEl, setAnchorEl] = React.useState(null);

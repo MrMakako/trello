@@ -6,14 +6,7 @@ import { getCards } from "./requests/card.request";
 import { Button, ListItem } from "@mui/material";
 import AddBoxIcon from "@mui/icons-material/AddBox";
 import { useSearchParams, useParams } from "react-router-dom";
-
-const tasks = [
-  { id: "1", content: "First task" },
-  { id: "2", content: "Second task" },
-  { id: "3", content: "Third task" },
-  { id: "4", content: "Fourth task" },
-  { id: "5", content: "Fifth task" },
-];
+import CardForm from "./components/forms/cardForm";
 
 const taskStatus = {
   requested: {
@@ -62,6 +55,7 @@ const onDragEnd = (result, columns, setColumns) => {
 export default function Board() {
   const { main_board_name } = useParams();
   const [searchParams] = useSearchParams();
+  const [openPopup, setOpenPopup] = useState(false);
 
   const [columns, setColumns] = useState(taskStatus);
   const [list, setList] = useState([]);
@@ -99,7 +93,7 @@ export default function Board() {
   const init = useEffect(() => {
     load(searchParams.get("board_id"));
   }, []);
-  ////
+
   useEffect(() => {
     console.log(columns);
   });
@@ -163,7 +157,12 @@ export default function Board() {
                 <div style={{ margin: 8 }}>
                   <List columnId={columnId} column={column}></List>
                 </div>
-                <Button onClick={() => addTask(columnId)}>
+                <Button
+                  onClick={() => {
+                    addTask(columnId);
+                    setOpenPopup(true);
+                  }}
+                >
                   <AddBoxIcon />
                 </Button>
               </div>
@@ -171,6 +170,7 @@ export default function Board() {
           })}
         </DragDropContext>
       </div>
+      <CardForm openPopup={openPopup} setOpenPopup={setOpenPopup} />
     </div>
   );
 }
