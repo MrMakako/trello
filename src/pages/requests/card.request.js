@@ -16,15 +16,15 @@ export async function getCards(board_id) {
   });
 }
 
-export function addCard(name, desc, list_id, position) {
+export function addCard(name, description, list_id, position) {
   const options = {
     method: "POST",
-    url: "/cards/add",
+    url: "/cards/all",
     headers: { Authorization: `Bearer ${localStorage.getItem("accessToken")}` },
     data: [
       {
         name,
-        desc,
+        description,
         list_id,
         position,
       },

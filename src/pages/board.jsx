@@ -3,15 +3,17 @@ import { DragDropContext } from "@hello-pangea/dnd";
 import List from "./components/list";
 import { getLists } from "./requests/list.request";
 import { getCards } from "./requests/card.request";
-import { Button, ListItem } from "@mui/material";
-import AddBoxIcon from "@mui/icons-material/AddBox";
 import { useSearchParams, useParams } from "react-router-dom";
 import CardForm from "./components/forms/cardForm";
-import Dialog from "@mui/material/Dialog";
-import DialogTitle from "@mui/material/DialogTitle";
-import DialogContent from "@mui/material/DialogContent";
-import DialogActions from "@mui/material/DialogActions";
-import TextField from "@mui/material/TextField";
+import AddBoxIcon from "@mui/icons-material/AddBox";
+import {
+  Button,
+  Dialog,
+  DialogActions,
+  DialogContent,
+  DialogTitle,
+  TextField,
+} from "@mui/material";
 
 const taskStatus = {
   requested: {
@@ -20,52 +22,55 @@ const taskStatus = {
   },
 };
 
-const onDragEnd = (result, columns, setColumns) => {
-  if (!result.destination) return;
-  const { source, destination } = result;
-
-  if (source.droppableId !== destination.droppableId) {
-    const sourceColumn = columns[source.droppableId];
-    const destColumn = columns[destination.droppableId];
-    const sourceItems = [...sourceColumn.items];
-    const destItems = [...destColumn.items];
-    const [removed] = sourceItems.splice(source.index, 1);
-    destItems.splice(destination.index, 0, removed);
-    setColumns({
-      ...columns,
-      [source.droppableId]: {
-        ...sourceColumn,
-        items: sourceItems,
-      },
-      [destination.droppableId]: {
-        ...destColumn,
-        items: destItems,
-      },
-    });
-  } else {
-    const column = columns[source.droppableId];
-    const copiedItems = [...column.items];
-    const [removed] = copiedItems.splice(source.index, 1);
-    copiedItems.splice(destination.index, 0, removed);
-    setColumns({
-      ...columns,
-      [source.droppableId]: {
-        ...column,
-        items: copiedItems,
-      },
-    });
-  }
-};
-
 export default function Board() {
-  const { main_board_name } = useParams();
-  const [searchParams] = useSearchParams();
-  const [openPopup, setOpenPopup] = useState(false);
+  const [columns, setColumns] = useState(taskStatus);
   const [showAddListPopup, setShowAddListPopup] = useState(false);
   const [newListName, setNewListName] = useState("");
+  const [openPopup, setOpenPopup] = useState(false);
+  const [formListId, setFormListId] = useState(null);
+  const [formPosition, setFormPosition] = useState(null);
 
-  const [columns, setColumns] = useState(taskStatus);
+  const { main_board_name } = useParams();
+  const [searchParams] = useSearchParams();
+
   const [list, setList] = useState([]);
+
+  const onDragEnd = (result) => {
+    if (!result.destination) return;
+    const { source, destination } = result;
+
+    if (source.droppableId !== destination.droppableId) {
+      const sourceColumn = columns[source.droppableId];
+      const destColumn = columns[destination.droppableId];
+      const sourceItems = [...sourceColumn.items];
+      const destItems = [...destColumn.items];
+      const [removed] = sourceItems.splice(source.index, 1);
+      destItems.splice(destination.index, 0, removed);
+      setColumns((prevColumns) => ({
+        ...prevColumns,
+        [source.droppableId]: {
+          ...sourceColumn,
+          items: sourceItems,
+        },
+        [destination.droppableId]: {
+          ...destColumn,
+          items: destItems,
+        },
+      }));
+    } else {
+      const column = columns[source.droppableId];
+      const copiedItems = [...column.items];
+      const [removed] = copiedItems.splice(source.index, 1);
+      copiedItems.splice(destination.index, 0, removed);
+      setColumns((prevColumns) => ({
+        ...prevColumns,
+        [source.droppableId]: {
+          ...column,
+          items: copiedItems,
+        },
+      }));
+    }
+  };
 
   async function load(board_id) {
     console.log("username:" + main_board_name);
@@ -121,24 +126,35 @@ export default function Board() {
     }));
   };
 
-  const addTask = (columnId) => {
-    const newCard = {
-      id: Date.now().toString(),
-      content: "new card",
-    };
+  const addTask = (columnId, position) => {
+    setOpenPopup(true);
+    setFormListId(columnId);
+    setFormPosition(position);
+  };
 
-    setColumns((prevColumns) => {
-      const column = prevColumns[columnId];
-      const updatedItems = [...column.items, newCard];
-
-      return {
-        ...prevColumns,
-        [columnId]: {
-          ...column,
-          items: updatedItems,
-        },
+  const handleOnSubmit = (name, description) => {
+    if (name !== "") {
+      const newCard = {
+        id: Date.now().toString(),
+        content: name,
       };
-    });
+
+      setColumns((prevColumns) => {
+        const column = prevColumns[formListId];
+        const updatedItems = [...column.items];
+        updatedItems.splice(formPosition, 0, newCard);
+
+        return {
+          ...prevColumns,
+          [formListId]: {
+            ...column,
+            items: updatedItems,
+          },
+        };
+      });
+
+      setOpenPopup(false);
+    }
   };
 
   return (
@@ -151,9 +167,7 @@ export default function Board() {
       <div
         style={{ display: "flex", justifyContent: "center", height: "100%" }}
       >
-        <DragDropContext
-          onDragEnd={(result) => onDragEnd(result, columns, setColumns)}
-        >
+        <DragDropContext onDragEnd={onDragEnd}>
           {Object.entries(columns).map(([columnId, column], index) => {
             return (
               <div
@@ -169,10 +183,7 @@ export default function Board() {
                   <List columnId={columnId} column={column}></List>
                 </div>
                 <Button
-                  onClick={() => {
-                    addTask(columnId);
-                    setOpenPopup(true);
-                  }}
+                  onClick={() => addTask(columnId, column.items.length + 1)}
                 >
                   <AddBoxIcon />
                 </Button>
@@ -181,7 +192,13 @@ export default function Board() {
           })}
         </DragDropContext>
       </div>
-      <CardForm openPopup={openPopup} setOpenPopup={setOpenPopup} />
+      <CardForm
+        listId={formListId}
+        position={formPosition}
+        openPopup={openPopup}
+        setOpenPopup={setOpenPopup}
+        onSubmit={handleOnSubmit}
+      />
 
       <Dialog
         open={showAddListPopup}

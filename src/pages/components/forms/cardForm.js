@@ -5,32 +5,35 @@ import {
   Dialog,
   DialogContent,
   DialogTitle,
-  Divider,
   FormControl,
   Grid,
   TextField,
   colors,
-  createTheme,
 } from "@mui/material";
 import { addCard } from "../../requests/card.request";
-export default function CardForm(props) {
-  const { list_id, position, openPopup, setOpenPopup } = props;
-  const [name, setName] = useState(" ");
-  const [desc, setDesc] = useState(" ");
 
-  function handleOnSubmit(name, desc) {
+export default function CardForm(props) {
+  const { listId, position, openPopup, setOpenPopup } = props;
+  const [name, setName] = useState("");
+  const [description, setdescription] = useState("");
+
+  const handleOnSubmit = (name, description) => {
     if (name !== "") {
-      addCard(name, desc, list_id, position);
+      console.log(name, description, listId, position);
+      addCard(name, description, listId, position);
       setOpenPopup(false);
     }
-  }
+  };
+
+  const handleSubmit = () => {
+    handleOnSubmit(name, description);
+  };
 
   return (
     <Dialog open={openPopup} maxWidth="md">
       <DialogTitle>
         <div>New Card</div>
         <Box textAlign="right">
-          {" "}
           <Button
             onClick={() => setOpenPopup(false)}
             sx={{
@@ -61,11 +64,10 @@ export default function CardForm(props) {
                 fullWidth
                 multiline
                 rows={4}
-                value={desc}
-                onChange={(e) => setDesc(e.target.value)}
+                value={description}
+                onChange={(e) => setdescription(e.target.value)}
               ></TextField>
             </Grid>
-            <Grid></Grid>
           </Grid>
           <Button
             sx={{
@@ -73,9 +75,9 @@ export default function CardForm(props) {
               backgroundColor: colors.purple[500],
             }}
             fullWidth
-            onClick={() => handleOnSubmit(name, desc)}
+            onClick={handleSubmit}
           >
-            add
+            Add
           </Button>
         </FormControl>
       </DialogContent>
