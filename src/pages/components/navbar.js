@@ -23,16 +23,32 @@ export default function PrimarySearchAppBar() {
     navigate("/", { replace: true });
   }
   return (
-    <AppBar sx={{ background: "#753E7F" }}>
+    <AppBar
+      sx={{ background: "#222222", top: 0, position: "sticky", zIndex: 999 }}
+    >
       <Toolbar>
-        <Typography>Kanban.io</Typography>
+        <Typography sx={{ color: "#ffffff" }}>Kanban.io</Typography>
 
-        <Button sx={{ marginLeft: "auto" }} onClick={() => setOpenPopup(true)}>
+        <Button
+          sx={{
+            marginLeft: "auto",
+            backgroundColor: "#ff0000",
+            color: "#ffffff",
+          }}
+          onClick={() => setOpenPopup(true)}
+        >
           New Board
           <AddBox />
         </Button>
 
-        <Button sx={{ marginLeft: "10px" }} onClick={() => Logout()}>
+        <Button
+          sx={{
+            marginLeft: "10px",
+            backgroundColor: "#0000ff", // Cambia el color de fondo del botón "Logout"
+            color: "#ffffff", // Cambia el color del texto del botón "Logout"
+          }}
+          onClick={() => Logout()}
+        >
           Log Out
           <LogoutIcon />
         </Button>
