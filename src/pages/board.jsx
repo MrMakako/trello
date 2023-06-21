@@ -23,14 +23,22 @@ export default function Board() {
   const [showAddListPopup, setShowAddListPopup] = useState(false);
   const [newListName, setNewListName] = useState("");
   const [openPopup, setOpenPopup] = useState(false);
+  //No se si es es necesario //
   const [formListId, setFormListId] = useState(null);
   const [formPosition, setFormPosition] = useState(null);
-
   const { main_board_name } = useParams();
   const [searchParams] = useSearchParams();
 
   const [list, setList] = useState([]);
 
+  //to add cards in memory
+  function addCard(item) {
+    // Find the corresponding item in taskStatus
+    const col = columns[item.list_id];
+    console.log(col);
+    // Push the task to the items array of the identified item
+    col.items.push(item);
+  }
   const onDragEnd = (result) => {
     if (!result.destination) return;
     const { source, destination } = result;
@@ -82,6 +90,7 @@ export default function Board() {
         if (card.list_id === item.id) {
           newCard.push({
             id: card.id.toString(),
+            name: card.name,
             content: card.description,
           });
         }
@@ -207,6 +216,7 @@ export default function Board() {
         openPopup={openPopup}
         setOpenPopup={setOpenPopup}
         onSubmit={handleOnSubmit}
+        addCard={addCard}
       />
 
       <Dialog

@@ -47,7 +47,9 @@ export default function List(props) {
                           ...provided.draggableProps.style,
                         }}
                       >
-                        {item.content}
+                        <h1>{item.name}</h1>
+                        <p>{item.content}</p>
+
                         <IconButton onClick={() => deleteC(item.id)}>
                           <Delete />
                         </IconButton>

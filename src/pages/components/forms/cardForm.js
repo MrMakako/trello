@@ -10,17 +10,27 @@ import {
   TextField,
   colors,
 } from "@mui/material";
-import { addCard } from "../../requests/card.request";
 
 export default function CardForm(props) {
-  const { listId, position, openPopup, setOpenPopup } = props;
+  const { listId, position, addCard, openPopup, setOpenPopup } = props;
   const [name, setName] = useState("");
+  //addCard en una funcion para agrear las cards en memoria
   const [description, setdescription] = useState("");
+  function generateUniqueId() {
+    const timestamp = new Date().getTime(); // Get current timestamp
+    const random = Math.random().toString(36).substring(2, 8); // Generate random string
 
+    return `${timestamp}-${random}`;
+  }
   const handleOnSubmit = (name, description) => {
     if (name !== "") {
       console.log(name, description, listId, position);
-      addCard(name, description, listId, position);
+      addCard({
+        id: generateUniqueId(),
+        name: name,
+        content: description,
+        list_id: listId,
+      });
       setOpenPopup(false);
     }
   };
@@ -76,6 +86,7 @@ export default function CardForm(props) {
             }}
             fullWidth
             onClick={handleSubmit}
+            //Esete hadleSumbmt agregara a la lista.
           >
             Add
           </Button>
