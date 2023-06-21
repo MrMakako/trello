@@ -13,6 +13,7 @@ import {
   DialogContent,
   DialogTitle,
   TextField,
+  Box,
 } from "@mui/material";
 
 const taskStatus = {};
@@ -156,7 +157,20 @@ export default function Board() {
     <div>
       <h1 style={{ textAlign: "center" }}>{main_board_name}</h1>
       <div style={{ display: "flex", justifyContent: "center" }}>
-        <Button onClick={addList}>Add List</Button>
+        <Box sx={{ display: "inline-block" }}>
+          <Button
+            variant="contained"
+            sx={{
+              color: "#FFFFFF",
+              "&:hover": {
+                backgroundColor: "#0000CC",
+              },
+            }}
+            onClick={addList}
+          >
+            Add List
+          </Button>
+        </Box>
       </div>
 
       <div
@@ -199,7 +213,9 @@ export default function Board() {
         open={showAddListPopup}
         onClose={() => setShowAddListPopup(false)}
       >
-        <DialogTitle>Add New List</DialogTitle>
+        <Button variant="contained" onClick={addList}>
+          <DialogTitle>Add New List</DialogTitle>
+        </Button>
         <DialogContent>
           <TextField
             label="List Name"
