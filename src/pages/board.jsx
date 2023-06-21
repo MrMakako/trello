@@ -15,12 +15,7 @@ import {
   TextField,
 } from "@mui/material";
 
-const taskStatus = {
-  requested: {
-    name: "Backlog",
-    items: [],
-  },
-};
+const taskStatus = {};
 
 export default function Board() {
   const [columns, setColumns] = useState(taskStatus);
