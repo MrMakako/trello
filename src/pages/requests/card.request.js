@@ -39,9 +39,13 @@ export function deleteCard(card_id) {
   Axios.delete("/cards/delete", {
     headers: {
       Authorization: `Bearer ${localStorage.getItem("accessToken")}`,
-      card_id,
     },
-  }).then((Response) => {
-    console.log(Response.data);
-  });
+    data: { card_id },
+  })
+    .then((response) => {
+      console.log(response.data);
+    })
+    .catch((error) => {
+      console.log(error);
+    });
 }

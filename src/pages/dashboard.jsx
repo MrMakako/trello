@@ -1,4 +1,3 @@
-import axios from "axios";
 import StackList from "./components/stack";
 import { useState, useEffect } from "react";
 import { getBoards } from "./requests/board.request";

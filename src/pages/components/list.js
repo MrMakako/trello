@@ -1,10 +1,17 @@
-import { DragDropContext, Draggable, Droppable } from "@hello-pangea/dnd";
-import { Button, IconButton } from "@mui/material";
+import { Draggable, Droppable } from "@hello-pangea/dnd";
+import { IconButton } from "@mui/material";
 import Delete from "@mui/icons-material/Delete";
+import { deleteCard } from "../requests/card.request";
 
-import React, { useState } from "react";
+import React from "react";
 export default function List(props) {
   const { columnId, column } = props;
+
+  const deleteC = (card_id) => {
+    console.log(card_id);
+    deleteCard(card_id);
+  };
+
   return (
     <Droppable droppableId={columnId} key={columnId}>
       {(provided, snapshot) => {
@@ -41,8 +48,8 @@ export default function List(props) {
                         }}
                       >
                         {item.content}
-                        <IconButton>
-                          <Delete></Delete>
+                        <IconButton onClick={() => deleteC(item.id)}>
+                          <Delete />
                         </IconButton>
                       </div>
                     );
