@@ -19,10 +19,10 @@ export function getBoards(setBoards) {
 }
 export function deleteBoard(board_id) {
   console.log(localStorage.getItem("accessToken"));
-  Axios.post("/boards/all", {
+  Axios.delete("/boards/delete", {
     headers: {
       Authorization: `Bearer ${localStorage.getItem("accessToken")}`,
-      board_id: board_id,
+      board_id,
     },
   }).then((Response) => {
     console.log(Response.data);

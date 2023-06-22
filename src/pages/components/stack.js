@@ -29,6 +29,11 @@ function goToBoard(board_id, board_name, navigate) {
   console.log(board_id);
 }
 
+const deleteB = (board_id) => {
+  console.log(board_id);
+  deleteBoard(board_id);
+};
+
 function createCard(board_name, board_id, navigate) {
   return (
     <Card sx={{ minWidth: 275 }}>
@@ -52,8 +57,15 @@ function createCard(board_name, board_id, navigate) {
           Go
         </Button>
         <Button
+          sx={{ ...styles, color: "White", backgroundColor: colors.green[500] }}
+          size="m"
+        >
+          Edit
+        </Button>{" "}
+        <Button
           sx={{ ...styles, color: "White", backgroundColor: colors.red[500] }}
           size="m"
+          onClick={() => deleteB(board_id)}
         >
           Delete
         </Button>
