@@ -26,6 +26,7 @@ export function deleteBoard(board_id) {
     },
   }).then((Response) => {
     console.log(Response.data);
+    window.location.reload();
   });
 }
 
