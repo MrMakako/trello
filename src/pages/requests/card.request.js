@@ -15,14 +15,17 @@ export async function getCards(board_id) {
     },
   });
 }
-export function addMultipleCards(cardList) {
+export function addMultipleCards(cardList, boardId) {
   const options = {
     method: "POST",
     url: "/cards/all",
-    headers: { Authorization: `Bearer ${localStorage.getItem("accessToken")}` },
+    headers: {
+      Authorization: `Bearer ${localStorage.getItem("accessToken")}`,
+      board_id: boardId,
+    },
     data: cardList,
   };
-  Axios.request(options);
+  return Axios.request(options);
 }
 export function addCard(name, description, list_id, position) {
   const options = {
@@ -41,19 +44,13 @@ export function addCard(name, description, list_id, position) {
   Axios.request(options);
 }
 
-export function deleteCard(card_id) {
+export async function deleteCard(card_id) {
   console.log(localStorage.getItem("accessToken"));
 
-  Axios.delete("/cards/delete", {
+  return await Axios.delete("/cards/delete", {
     headers: {
       Authorization: `Bearer ${localStorage.getItem("accessToken")}`,
     },
     data: { card_id },
-  })
-    .then((response) => {
-      console.log(response.data);
-    })
-    .catch((error) => {
-      console.log(error);
-    });
+  });
 }
