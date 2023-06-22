@@ -15,3 +15,17 @@ export async function getLists(board_id) {
     },
   });
 }
+
+export async function addNewLists(board) {
+  console.log("Agregando");
+  const options = {
+    method: "POST",
+    url: "/lists/new",
+    headers: { Authorization: `Bearer ${localStorage.getItem("accessToken")}` },
+    data: board,
+  };
+
+  Axios.request(options).then((rs) => {
+    window.location.reload();
+  });
+}

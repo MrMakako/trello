@@ -1,8 +1,8 @@
 import React, { useEffect, useState } from "react";
 import { DragDropContext } from "@hello-pangea/dnd";
 import List from "./components/list";
-import { getLists } from "./requests/list.request";
-import { getCards } from "./requests/card.request";
+import { getLists, addNewLists } from "./requests/list.request";
+import { addMultipleCards, getCards } from "./requests/card.request";
 import { useSearchParams, useParams } from "react-router-dom";
 import CardForm from "./components/forms/cardForm";
 import AddBoxIcon from "@mui/icons-material/AddBox";
@@ -76,6 +76,29 @@ export default function Board() {
     }
   };
 
+  async function submitData() {
+    const cards = [];
+    for (let key in columns) {
+      if (columns.hasOwnProperty(key)) {
+        console.log(key); // Output: requested
+        ///a base de datos enviaremos todas las cards con sus respectivos position
+        ///en la misma forma que el usuario los coloco.
+        const itemsArray = columns[key].items;
+        let position = 1;
+        for (let i = 0; i < itemsArray.length; i++) {
+          console.log(itemsArray[i]); // Output: Item 1, Item 2, Item 3
+          itemsArray[i].position = position;
+          itemsArray[i].list_id = key;
+          cards.push(itemsArray[i]);
+          position += 1; //le sumamaos la posicion
+        }
+      }
+    }
+    addMultipleCards(cards); //mandamos una lista con las cards con sus respectivas posiciones en base de datso ejecutaremos
+    //la siguiente intruccion addCards(req,res)///
+    console.log(columns);
+  }
+
   async function load(board_id) {
     console.log("username:" + main_board_name);
     const Lists = await getLists(board_id);
@@ -125,6 +148,8 @@ export default function Board() {
       name: name,
       items: [],
     };
+    console.log("Executing addlist");
+    addNewLists({ list_name: name, board_id: searchParams.get("board_id") });
     setColumns((prevColumns) => ({
       ...prevColumns,
       [newList.id]: newList,
@@ -165,6 +190,7 @@ export default function Board() {
   return (
     <div>
       <h1 style={{ textAlign: "center" }}>{main_board_name}</h1>
+      <Button onClick={() => submitData()}>Save</Button>
       <div style={{ display: "flex", justifyContent: "center" }}>
         <Box sx={{ display: "inline-block" }}>
           <Button

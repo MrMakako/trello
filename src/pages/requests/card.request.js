@@ -15,7 +15,15 @@ export async function getCards(board_id) {
     },
   });
 }
-
+export function addMultipleCards(cardList) {
+  const options = {
+    method: "POST",
+    url: "/cards/all",
+    headers: { Authorization: `Bearer ${localStorage.getItem("accessToken")}` },
+    data: cardList,
+  };
+  Axios.request(options);
+}
 export function addCard(name, description, list_id, position) {
   const options = {
     method: "POST",
