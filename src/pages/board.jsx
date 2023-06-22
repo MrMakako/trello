@@ -6,6 +6,8 @@ import { addMultipleCards, getCards } from "./requests/card.request";
 import { useSearchParams, useParams } from "react-router-dom";
 import CardForm from "./components/forms/cardForm";
 import AddBoxIcon from "@mui/icons-material/AddBox";
+import EditIcon from "@mui/icons-material/Edit";
+import EditList from "./components/forms/editList";
 import {
   Button,
   Dialog,
@@ -23,6 +25,8 @@ export default function Board() {
   const [showAddListPopup, setShowAddListPopup] = useState(false);
   const [newListName, setNewListName] = useState("");
   const [openPopup, setOpenPopup] = useState(false);
+  const [showEditListPopup, setShowEditListPopup] = useState(false); //controla el popup de editList
+
   //No se si es es necesario //
   const [formListId, setFormListId] = useState(null);
   const [formPosition, setFormPosition] = useState(null);
@@ -94,7 +98,8 @@ export default function Board() {
         }
       }
     }
-    addMultipleCards(cards); //mandamos una lista con las cards con sus respectivas posiciones en base de datso ejecutaremos
+
+    return addMultipleCards(cards, searchParams.get("board_id")); //mandamos una lista con las cards con sus respectivas posiciones en base de datso ejecutaremos
     //la siguiente intruccion addCards(req,res)///
     console.log(columns);
   }
@@ -129,6 +134,8 @@ export default function Board() {
     setList(Lists.data);
 
     setColumns({ ...columns, ...newColumns });
+
+    return [Lists, Cards];
   }
   const init = useEffect(() => {
     load(searchParams.get("board_id"));
@@ -162,6 +169,12 @@ export default function Board() {
     setFormPosition(position);
   };
 
+  const editList = (columnId) => {
+    setFormListId(columnId);
+    setNewListName(columns[columnId].name);
+    setShowEditListPopup(true);
+  };
+
   const handleOnSubmit = (name, description) => {
     if (name !== "") {
       const newCard = {
@@ -189,7 +202,7 @@ export default function Board() {
 
   return (
     <div>
-      <h1 style={{ textAlign: "center" }}>{main_board_name}</h1>
+      <h1 style={{ textAlign: "center" }}>{main_board_name} </h1>
       <Button onClick={() => submitData()}>Save</Button>
       <div style={{ display: "flex", justifyContent: "center" }}>
         <Box sx={{ display: "inline-block" }}>
@@ -222,15 +235,23 @@ export default function Board() {
                 }}
                 key={columnId}
               >
-                <h2>{column.name}</h2>
+                <h2>
+                  {column.name}
+                  <Button onClick={() => editList(columnId)}>
+                    <EditIcon />
+                  </Button>
+                </h2>
+
                 <div style={{ margin: 8 }}>
                   <List columnId={columnId} column={column}></List>
                 </div>
-                <Button
-                  onClick={() => addTask(columnId, column.items.length + 1)}
-                >
-                  <AddBoxIcon />
-                </Button>
+                <div>
+                  <Button
+                    onClick={() => addTask(columnId, column.items.length + 1)}
+                  >
+                    <AddBoxIcon />
+                  </Button>
+                </div>
               </div>
             );
           })}
@@ -243,6 +264,8 @@ export default function Board() {
         setOpenPopup={setOpenPopup}
         onSubmit={handleOnSubmit}
         addCard={addCard}
+        Load={load}
+        Save={submitData}
       />
 
       <Dialog
@@ -259,6 +282,7 @@ export default function Board() {
             onChange={(e) => setNewListName(e.target.value)}
           />
         </DialogContent>
+
         <DialogActions>
           <Button onClick={() => setShowAddListPopup(false)}>Cancel</Button>
           <Button
@@ -272,6 +296,13 @@ export default function Board() {
           </Button>
         </DialogActions>
       </Dialog>
+      <EditList
+        listId={formListId}
+        listName={newListName}
+        setNewListName={setNewListName}
+        showEditListPopup={showEditListPopup}
+        setShowEditListPopup={setShowEditListPopup}
+      ></EditList>
     </div>
   );
 }

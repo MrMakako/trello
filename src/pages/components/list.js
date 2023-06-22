@@ -9,7 +9,9 @@ export default function List(props) {
 
   const deleteC = (card_id) => {
     console.log(card_id);
-    deleteCard(card_id);
+    deleteCard(card_id).then((rs) => {
+      window.location.reload();
+    });
   };
 
   return (

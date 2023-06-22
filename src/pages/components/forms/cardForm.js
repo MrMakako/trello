@@ -10,10 +10,12 @@ import {
   TextField,
   colors,
 } from "@mui/material";
-
+import { useSearchParams } from "react-router-dom";
 export default function CardForm(props) {
-  const { listId, position, addCard, openPopup, setOpenPopup } = props;
+  const { listId, position, addCard, openPopup, setOpenPopup, Load, Save } =
+    props;
   const [name, setName] = useState("");
+  const [searchParams] = useSearchParams();
   //addCard en una funcion para agrear las cards en memoria
   const [description, setdescription] = useState("");
   function generateUniqueId() {
@@ -32,6 +34,9 @@ export default function CardForm(props) {
         list_id: listId,
       });
       setOpenPopup(false);
+      Save().then((rs) => {
+        Load(searchParams.get("board_id"));
+      });
     }
   };
 
